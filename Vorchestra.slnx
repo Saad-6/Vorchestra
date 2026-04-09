@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Vorchestra.API/Vorchestra.API.csproj" Id="95eef835-e2cb-421d-aabb-1574e6b19dcc" />
+  <Project Path="Vorchestra.Application/Vorchestra.Application.csproj" />
+  <Project Path="Vorchestra.DTOs/Vorchestra.DTOs.csproj" />
+  <Project Path="Vorchestra.Infrastructure/Vorchestra.Infrastructure.csproj" />
+  <Project Path="Vorchestra/Vorchestra.Domain.csproj" />
+</Solution>
