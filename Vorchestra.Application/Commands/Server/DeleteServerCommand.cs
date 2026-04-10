@@ -1,6 +1,6 @@
 ﻿using MediatR;
+using Shared.Application.Models;
 using Vorchestra.Application.Interfaces;
-using Vorchestra.Application.Models;
 
 namespace Vorchestra.Application.Commands.Server;
 

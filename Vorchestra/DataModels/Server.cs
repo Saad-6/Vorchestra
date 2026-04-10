@@ -1,4 +1,6 @@
-﻿namespace Vorchestra.Domain.DataModels;
+﻿using Shared.Domain.DataModels;
+
+namespace Vorchestra.Domain.DataModels;
 
 public class Server : BaseEntity
 {

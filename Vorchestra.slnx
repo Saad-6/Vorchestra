@@ -1,4 +1,14 @@
 <Solution>
+  <Folder Name="/Services/" />
+  <Folder Name="/Services/Xcript/">
+    <Project Path="Xcript.Application/Xcript.Application.csproj" Id="b7d99247-9d72-4b0c-9250-9f5408fa932b" />
+    <Project Path="Xcript.Domain/Xcript.Domain.csproj" Id="1fd27385-c9c7-4cfb-97fb-d137014dd373" />
+    <Project Path="Xcript.DTOs/Xcript.DTOs.csproj" Id="68a33368-2425-4986-aaa7-2d1418eef13c" />
+  </Folder>
+  <Folder Name="/Shared/">
+    <Project Path="Shared.Application/Shared.Application.csproj" Id="cc9de640-303f-43b4-88f9-09edb50dba83" />
+    <Project Path="Shared.Domain/Shared.Domain.csproj" Id="3f840d5e-0d72-4b91-b56e-62a98f7bbeab" />
+  </Folder>
   <Project Path="Vorchestra.API/Vorchestra.API.csproj" Id="95eef835-e2cb-421d-aabb-1574e6b19dcc" />
   <Project Path="Vorchestra.Application/Vorchestra.Application.csproj" />
   <Project Path="Vorchestra.DTOs/Vorchestra.DTOs.csproj" />

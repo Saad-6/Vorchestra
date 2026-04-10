@@ -1,4 +1,5 @@
-﻿using Vorchestra.Domain.Constants;
+﻿using Shared.Domain.DataModels;
+using Vorchestra.Domain.Constants;
 
 namespace Vorchestra.Domain.DataModels;
 

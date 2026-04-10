@@ -1,4 +1,4 @@
-﻿namespace Vorchestra.Domain.DataModels;
+﻿namespace Shared.Domain.DataModels;
 
 public class BaseEntity
 {

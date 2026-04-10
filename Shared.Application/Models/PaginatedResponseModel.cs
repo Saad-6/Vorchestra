@@ -1,4 +1,4 @@
-﻿namespace Vorchestra.Application.Models
+﻿namespace Shared.Application.Models
 {
     public class PaginatedResponseModel<T> : ResponseModel<List<T>>
     {

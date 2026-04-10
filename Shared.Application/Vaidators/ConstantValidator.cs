@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Reflection;
 
-namespace Vorchestra.Application.Vaidators;
+namespace Shared.Application.Vaidators;
 
 public class ConstantValidator
 {

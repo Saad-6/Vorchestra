@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Shared.Application.Models;
 using Vorchestra.Application.Interfaces;
-using Vorchestra.Application.Models;
 using Vorchestra.Domain.Constants;
 using Vorchestra.Domain.DataModels;
 using Vorchestra.DTOs;

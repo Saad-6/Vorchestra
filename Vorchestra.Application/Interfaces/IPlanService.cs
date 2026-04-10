@@ -1,4 +1,4 @@
-﻿using Vorchestra.Application.Models;
+﻿using Shared.Application.Models;
 using Vorchestra.DTOs;
 
 namespace Vorchestra.Application.Interfaces;

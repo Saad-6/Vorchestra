@@ -1,7 +1,7 @@
 ﻿using MediatR;
+using Shared.Application.Models;
+using Shared.Application.Vaidators;
 using Vorchestra.Application.Interfaces;
-using Vorchestra.Application.Models;
-using Vorchestra.Application.Vaidators;
 using Vorchestra.Domain.Constants;
 using Vorchestra.DTOs;
 
