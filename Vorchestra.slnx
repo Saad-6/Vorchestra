@@ -1,18 +1,22 @@
 <Solution>
   <Folder Name="/Services/" />
+  <Folder Name="/Services/Vorchestra/">
+    <Project Path="services/vorchestra/Vorchestra/Vorchestra.Domain.csproj" />
+    <Project Path="services/vorchestra/Vorchestra.API/Vorchestra.API.csproj" Id="95eef835-e2cb-421d-aabb-1574e6b19dcc" />
+    <Project Path="services/vorchestra/Vorchestra.Application/Vorchestra.Application.csproj" />
+    <Project Path="services/vorchestra/Vorchestra.DTOs/Vorchestra.DTOs.csproj" />
+    <Project Path="services/vorchestra/Vorchestra.Infrastructure/Vorchestra.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/Services/Xcript/">
-    <Project Path="Xcript.Application/Xcript.Application.csproj" Id="b7d99247-9d72-4b0c-9250-9f5408fa932b" />
-    <Project Path="Xcript.Domain/Xcript.Domain.csproj" Id="1fd27385-c9c7-4cfb-97fb-d137014dd373" />
-    <Project Path="Xcript.DTOs/Xcript.DTOs.csproj" Id="68a33368-2425-4986-aaa7-2d1418eef13c" />
-    <Project Path="Xcript.Infrastructure/Xcript.Infrastructure.csproj" Id="0428f72c-9715-4848-a507-0b22d5802392" />
+    <Project Path="services/xcript/Xcript.API/Xcript.API.csproj" Id="b743d73d-06dc-4ab4-8fad-cddb403553bd" />
+    <Project Path="services/xcript/Xcript.Application/Xcript.Application.csproj" Id="b7d99247-9d72-4b0c-9250-9f5408fa932b" />
+    <Project Path="services/xcript/Xcript.Domain/Xcript.Domain.csproj" Id="1fd27385-c9c7-4cfb-97fb-d137014dd373" />
+    <Project Path="services/xcript/Xcript.DTOs/Xcript.DTOs.csproj" Id="68a33368-2425-4986-aaa7-2d1418eef13c" />
+    <Project Path="services/xcript/Xcript.Infrastructure/Xcript.Infrastructure.csproj" Id="0428f72c-9715-4848-a507-0b22d5802392" />
   </Folder>
   <Folder Name="/Shared/">
-    <Project Path="Shared.Application/Shared.Application.csproj" Id="cc9de640-303f-43b4-88f9-09edb50dba83" />
-    <Project Path="Shared.Domain/Shared.Domain.csproj" Id="3f840d5e-0d72-4b91-b56e-62a98f7bbeab" />
+    <Project Path="shared/Shared.Application/Shared.Application.csproj" Id="cc9de640-303f-43b4-88f9-09edb50dba83" />
+    <Project Path="shared/Shared.Domain/Shared.Domain.csproj" Id="3f840d5e-0d72-4b91-b56e-62a98f7bbeab" />
+    <Project Path="shared/Shared.Infrastructure/Shared.Infrastructure.csproj" Id="758930ca-fba0-4c4b-a42d-46dc1d8e9e53" />
   </Folder>
-  <Project Path="Vorchestra.API/Vorchestra.API.csproj" Id="95eef835-e2cb-421d-aabb-1574e6b19dcc" />
-  <Project Path="Vorchestra.Application/Vorchestra.Application.csproj" />
-  <Project Path="Vorchestra.DTOs/Vorchestra.DTOs.csproj" />
-  <Project Path="Vorchestra.Infrastructure/Vorchestra.Infrastructure.csproj" />
-  <Project Path="Vorchestra/Vorchestra.Domain.csproj" />
 </Solution>
