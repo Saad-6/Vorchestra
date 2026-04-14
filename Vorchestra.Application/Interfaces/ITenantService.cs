@@ -5,9 +5,9 @@ namespace Vorchestra.Application.Interfaces;
 
 public interface ITenantService
 {
-    Task<PaginatedResponseModel<TenantViewDto>> GetPaginatedTenantsAsync(int pageNumber, int pageSize, string? status = null, string? name = null, CancellationToken cancellationToken = default);
-    Task<ResponseModel<string>> CreateTenantAsync(CreateTenantDto tenant, CancellationToken cancellationToken = default);
-    Task<ResponseModel<string>> UpdateTenantAsync(UpdateTenantDto tenant, CancellationToken cancellationToken = default);
+    Task<PaginatedResponseModel<TenantViewDto>> GetPaginatedTenantsAsync(FilterModel filter, CancellationToken cancellationToken = default);
+    Task<ResponseModel<Guid>> CreateTenantAsync(CreateTenantDto tenant, CancellationToken cancellationToken = default);
+    Task<ResponseModel<Guid>> UpdateTenantAsync(UpdateTenantDto tenant, CancellationToken cancellationToken = default);
     Task<ResponseModel<string>> ApplyFreeTrialAsync(Guid tenantId, DateTimeOffset trialEndDate, CancellationToken cancellationToken = default);
     Task<ResponseModel<string>> ApplyPlanAsync(ApplyPlanDto apply, CancellationToken cancellationToken = default);
     Task<ResponseModel<string>> CancelSubscriptionAsync(Guid tenantId, CancellationToken cancellationToken = default);

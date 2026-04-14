@@ -188,7 +188,7 @@ public class TenantService : ITenantService
         };
     }
 
-    public async Task<ResponseModel<string>> CreateTenantAsync(CreateTenantDto tenant, CancellationToken cancellationToken = default)
+    public async Task<ResponseModel<Guid>> CreateTenantAsync(CreateTenantDto tenant, CancellationToken cancellationToken = default)
     {
         var existingTenant = await _context.Tenants.AnyAsync(
             t => t.AdminEmail == tenant.AdminEmail 
@@ -197,10 +197,11 @@ public class TenantService : ITenantService
 
         if(existingTenant)
         {
-            return new ResponseModel<string>
+            return new ResponseModel<Guid>
             {
                 Success = false,
-                Message = "A tenant with the same admin email, business email, or domain already exists."
+                Message = "A tenant with the same admin email, business email, or domain already exists.",
+                Data = Guid.Empty
             };
         }
         var newTenant = new Tenant();
@@ -216,29 +217,24 @@ public class TenantService : ITenantService
         await _context.AddAsync(newTenant, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new ResponseModel<string>
+        return new ResponseModel<Guid>
         {
             Success = true,
-            Message = "Tenant created successfully."
+            Message = "Tenant created successfully.",
+            Data = newTenant.Id
         };
     }
 
-    public async Task<PaginatedResponseModel<TenantViewDto>> GetPaginatedTenantsAsync(int pageNumber, int pageSize, string? status = null, string? name = null, CancellationToken cancellationToken = default)
+    public async Task<PaginatedResponseModel<TenantViewDto>> GetPaginatedTenantsAsync(FilterModel filter, CancellationToken cancellationToken = default)
     {
         var query = _context.Tenants.AsQueryable();
-        if (!string.IsNullOrEmpty(status))
-        {
-            query = query.Where(t => t.Status.ToString() == status);
-        }
-        if (!string.IsNullOrEmpty(name))
-        {
-            query = query.Where(t => t.Name.Contains(name));
-        }
+
+        query = filter.ApplyFilters(query);
 
         var totalCount = await query.CountAsync(cancellationToken);
-        var tenants = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+        var tenants = await query.ToListAsync(cancellationToken);
 
-        var tenanstDto = tenants.Select(t => new TenantViewDto
+        var tenantDto = tenants.Select(t => new TenantViewDto
         {
             Id = t.Id,
             Name = t.Name,
@@ -265,10 +261,10 @@ public class TenantService : ITenantService
         return new PaginatedResponseModel<TenantViewDto>
         {
             Success = true,
-            Data = tenanstDto,
+            Data = tenantDto,
             TotalCount = totalCount,
-            PageNumber = pageNumber,
-            PageSize = pageSize
+            PageNumber = filter.Page,
+            PageSize = filter.PageSize
         };
     }
 
@@ -327,17 +323,18 @@ public class TenantService : ITenantService
         };
     }
 
-    public async Task<ResponseModel<string>> UpdateTenantAsync(UpdateTenantDto tenant, CancellationToken cancellationToken = default)
+    public async Task<ResponseModel<Guid>> UpdateTenantAsync(UpdateTenantDto tenant, CancellationToken cancellationToken = default)
     {
         var existingTenant = await _context.Tenants.FirstOrDefaultAsync(
             t => t.Id == tenant.Id, cancellationToken);
 
         if (existingTenant == null)
         {
-            return new ResponseModel<string>
+            return new ResponseModel<Guid>
             {
                 Success = false,
-                Message = $"The tenant with Id {tenant.Id} does not exist."
+                Message = $"The tenant with Id {tenant.Id} does not exist.",
+                Data = Guid.Empty
             };
         }
 
@@ -361,10 +358,11 @@ public class TenantService : ITenantService
         _context.Tenants.Update(existingTenant);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new ResponseModel<string>
+        return new ResponseModel<Guid>
         {
             Success = true,
-            Message = "Tenant updated successfully."
+            Message = "Tenant updated successfully.",
+            Data = existingTenant.Id
         };
     }
 }

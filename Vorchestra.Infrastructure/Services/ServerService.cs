@@ -13,26 +13,26 @@ public class ServerService : IServerService
     {
         _context = context;
     }
-    public async Task<ResponseModel<string>> CreateServerAsync(CreateServerDto server, CancellationToken cancellationToken = default)
+    public async Task<ResponseModel<Guid>> CreateServerAsync(CreateServerDto server, CancellationToken cancellationToken = default)
     {
         var nameCheck = await _context.Servers.AnyAsync(s => s.Name == server.Name, cancellationToken);
         if (nameCheck)
         {
-            return new ResponseModel<string>
+            return new ResponseModel<Guid>
             {
                 Success = false,
                 Message = "A server with the same name already exists.",
-                Data = null
+                Data = Guid.Empty
             };
         }
         var ipAddressCheck = await _context.Servers.AnyAsync(s => s.IPAddress == server.IPAddress, cancellationToken);
         if (ipAddressCheck)
         {
-            return new ResponseModel<string>
+            return new ResponseModel<Guid>
             {
                 Success = false,
                 Message = "A server with the same IP address already exists.",
-                Data = null
+                Data = Guid.Empty
             };
         }
 
@@ -55,11 +55,11 @@ public class ServerService : IServerService
         await _context.Servers.AddAsync(newServer, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new ResponseModel<string>
+        return new ResponseModel<Guid>
         {
             Success = true,
             Message = "Server created successfully.",
-            Data = newServer.Id.ToString()
+            Data = newServer.Id
         };
     }
 
@@ -87,24 +87,16 @@ public class ServerService : IServerService
         };
     }
 
-    public async Task<PaginatedResponseModel<ServerViewDto>> GetPaginatedServersAsync(int pageNumber, int pageSize, string? status = null, string? query = null, CancellationToken cancellationToken = default)
+    public async Task<PaginatedResponseModel<ServerViewDto>> GetPaginatedServersAsync(FilterModel filter, CancellationToken cancellationToken = default)
     {
         var serversQuery = _context.Servers.AsQueryable();
-        if (!string.IsNullOrEmpty(status))
-        {
-            serversQuery = serversQuery.Where(s => s.Status == status);
-        }
-        if (!string.IsNullOrEmpty(query))
-        {
-            serversQuery = serversQuery.Where(s => s.Name.Contains(query) || s.IPAddress.Contains(query));
-        }
+
+        serversQuery = filter.ApplyFilters(serversQuery);
 
         var totalCount = await serversQuery.CountAsync(cancellationToken);
 
         var servers = await serversQuery
             .OrderBy(s => s.Name)
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
             .Select(s => new ServerViewDto
             {
                 Id = s.Id,
@@ -128,42 +120,42 @@ public class ServerService : IServerService
             Message = "Servers retrieved successfully.",
             Data = servers,
             TotalCount = totalCount,
-            PageNumber = pageNumber,
-            PageSize = pageSize,
+            PageNumber = filter.Page,
+            PageSize = filter.PageSize,
         };
     }
 
-    public async Task<ResponseModel<string>> UpdateServerAsync(UpdateServerDto server, CancellationToken cancellationToken = default)
+    public async Task<ResponseModel<Guid>> UpdateServerAsync(UpdateServerDto server, CancellationToken cancellationToken = default)
     {
         var nameCheck = await _context.Servers.AnyAsync(s => s.Name == server.Name && s.Id != server.Id, cancellationToken);
         if (nameCheck)
         {
-            return new ResponseModel<string>
+            return new ResponseModel<Guid>
             {
                 Success = false,
                 Message = "A server with the same name already exists.",
-                Data = null
+                Data = Guid.Empty
             };
         }
         var ipAddressCheck = await _context.Servers.AnyAsync(s => s.IPAddress == server.IPAddress && s.Id != server.Id, cancellationToken);
         if (ipAddressCheck)
         {
-            return new ResponseModel<string>
+            return new ResponseModel<Guid>
             {
                 Success = false,
                 Message = "A server with the same IP address already exists.",
-                Data = null
+                Data = Guid.Empty
             };
         }
 
         var existingServer = await _context.Servers.FindAsync(server.Id, cancellationToken);
         if (existingServer == null)
         {
-            return new ResponseModel<string>
+            return new ResponseModel<Guid>
             {
                 Success = false,
                 Message = "Server not found.",
-                Data = null
+                Data = Guid.Empty
             };
         }
 
@@ -182,11 +174,11 @@ public class ServerService : IServerService
         _context.Servers.Update(existingServer);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new ResponseModel<string>
+        return new ResponseModel<Guid>
         {
             Success = true,
             Message = "Server updated successfully.",
-            Data = existingServer.Id.ToString()
+            Data = existingServer.Id
         };
     }
 }

@@ -25,6 +25,17 @@ public class TenantsPaginatedQueryHandler : IRequestHandler<TenantsPaginatedQuer
     {
         ConstantValidator.Validate<TenantStatus>(request.Status);
 
-        return await _tenantService.GetPaginatedTenantsAsync(request.PageNumber, request.PageSize, request.Status, request.Name, cancellationToken);
+        var filterModel = new FilterModel
+        {
+            Page = request.PageNumber,
+            PageSize = request.PageSize,
+            Filters = new Dictionary<string, object>()
+            {
+                {nameof(Domain.DataModels.Tenant.Status), request.Status ?? string.Empty},
+                {nameof(Domain.DataModels.Tenant.Name), request.Name ?? string.Empty}
+            }
+        };
+
+        return await _tenantService.GetPaginatedTenantsAsync(filterModel, cancellationToken);
     }
 }

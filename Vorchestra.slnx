@@ -4,6 +4,7 @@
     <Project Path="Xcript.Application/Xcript.Application.csproj" Id="b7d99247-9d72-4b0c-9250-9f5408fa932b" />
     <Project Path="Xcript.Domain/Xcript.Domain.csproj" Id="1fd27385-c9c7-4cfb-97fb-d137014dd373" />
     <Project Path="Xcript.DTOs/Xcript.DTOs.csproj" Id="68a33368-2425-4986-aaa7-2d1418eef13c" />
+    <Project Path="Xcript.Infrastructure/Xcript.Infrastructure.csproj" Id="0428f72c-9715-4848-a507-0b22d5802392" />
   </Folder>
   <Folder Name="/Shared/">
     <Project Path="Shared.Application/Shared.Application.csproj" Id="cc9de640-303f-43b4-88f9-09edb50dba83" />

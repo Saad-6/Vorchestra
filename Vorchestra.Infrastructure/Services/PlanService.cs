@@ -13,16 +13,16 @@ public class PlanService : IPlanService
     {
         _context = context;
     }
-    public async Task<ResponseModel<string>> CreatePlanAsync(CreatePlanDto plan)
+    public async Task<ResponseModel<Guid>> CreatePlanAsync(CreatePlanDto plan)
     {
         var existingPlan = await _context.Plans.AnyAsync(p => p.Name == plan.Name || p.Slug == plan.Slug);
         if (existingPlan)
         {
-            return new ResponseModel<string>
+            return new ResponseModel<Guid>
             {
                 Success = false,
                 Message = "A plan with the same name or slug already exists.",
-                Data = null
+                Data = Guid.Empty
             };
         }
 
@@ -42,11 +42,11 @@ public class PlanService : IPlanService
         await _context.Plans.AddAsync(newPlan);
         await _context.SaveChangesAsync();
 
-        return new ResponseModel<string>
+        return new ResponseModel<Guid>
         {
             Success = true,
             Message = "Plan created successfully.",
-            Data = newPlan.Id.ToString()
+            Data = newPlan.Id
         };
     }
 
@@ -73,21 +73,13 @@ public class PlanService : IPlanService
         };
     }
 
-    public async Task<ResponseModel<List<PlanViewDto>>> GetAllPlansAsync(bool? isActive = null, string? query = null)
+    public async Task<ResponseModel<List<PlanViewDto>>> GetAllPlansAsync(FilterModel filter, CancellationToken cancellationToken = default)
     {
         var plansQuery = _context.Plans.AsQueryable();
 
-        if (isActive.HasValue)
-        {
-            plansQuery = plansQuery.Where(p => p.IsActive == isActive.Value);
-        }
+        plansQuery = filter.ApplyFilters(plansQuery);
 
-        if (!string.IsNullOrEmpty(query))
-        {
-            plansQuery = plansQuery.Where(p => p.Name.Contains(query) || p.Slug.Contains(query));
-        }
-
-        var plans = await plansQuery.ToListAsync();
+        var plans = await plansQuery.ToListAsync(cancellationToken);
 
         var planDtos = plans.Select(p => new PlanViewDto
         {
@@ -110,27 +102,27 @@ public class PlanService : IPlanService
         };
     }
 
-    public async Task<ResponseModel<string>> UpdatePlanAsync(UpdatePlanDto plan)
+    public async Task<ResponseModel<Guid>> UpdatePlanAsync(UpdatePlanDto plan)
     {
         var existingPlan = await _context.Plans.FirstOrDefaultAsync(p => p.Id == plan.Id);
         if (existingPlan == null)
         {
-            return new ResponseModel<string>
+            return new ResponseModel<Guid>
             {
                 Success = false,
                 Message = "A plan with the specified ID does not exist.",
-                Data = null
+                Data = Guid.Empty
             };
         }
 
         var nameCheck = await _context.Plans.AnyAsync(p => (p.Name == plan.Name || p.Slug == plan.Slug) && p.Id != plan.Id);
         if(nameCheck)
         {
-            return new ResponseModel<string>
+            return new ResponseModel<Guid>
             {
                 Success = false,
                 Message = "Another plan with the same name or slug already exists.",
-                Data = null
+                Data = Guid.Empty
             };
         }
 
@@ -146,11 +138,11 @@ public class PlanService : IPlanService
         _context.Plans.Update(existingPlan);
         await _context.SaveChangesAsync();
 
-        return new ResponseModel<string>
+        return new ResponseModel<Guid>
         {
             Success = true,
             Message = "Plan updated successfully.",
-            Data = existingPlan.Id.ToString()
+            Data = existingPlan.Id
         };
     }
 }

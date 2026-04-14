@@ -20,6 +20,14 @@ public class GetAllPlansQueryHandler : IRequestHandler<GetAllPlansQuery, Respons
     }
     public async Task<ResponseModel<List<PlanViewDto>>> Handle(GetAllPlansQuery request, CancellationToken cancellationToken)
     {
-        return await _planService.GetAllPlansAsync(request.IsActive, request.Query);
+        var filterModel = new FilterModel
+        {
+            Filters = new Dictionary<string, object>()
+            {
+                { nameof(Domain.DataModels.Plan.IsActive), request.IsActive },
+                { nameof(Domain.DataModels.Plan.Name), request.Query }
+            }
+        };
+        return await _planService.GetAllPlansAsync(filterModel, cancellationToken);
     }
 }

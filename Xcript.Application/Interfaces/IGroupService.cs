@@ -5,9 +5,9 @@ namespace Xcript.Application.Interfaces;
 
 public interface IGroupService
 {
-    Task<ResponseModel<string>> CreateGroupAsync(CreateGroupDto group);
-    Task<ResponseModel<string>> UpdateGroupAsync(UpdateGroupDto group);
-    Task<ResponseModel<string>> DeleteGroupAsync(int groupId);
-    Task<ResponseModel<GroupViewDto>> GetGroupByIdAsync(string groupId);
-    Task<PaginatedResponseModel<GroupViewDto>> GetPaginatedGroupsAsync(string? name = null);
+    Task<ResponseModel<Guid>> CreateGroupAsync(CreateGroupDto group, CancellationToken cancellationToken = default);
+    Task<ResponseModel<Guid>> UpdateGroupAsync(UpdateGroupDto group, CancellationToken cancellationToken = default);
+    Task<ResponseModel<string>> DeleteGroupAsync(Guid groupId, CancellationToken cancellationToken = default);
+    Task<ResponseModel<GroupViewDto>> GetGroupByIdAsync(Guid groupId, CancellationToken cancellationToken = default);
+    Task<PaginatedResponseModel<GroupViewDto>> GetPaginatedGroupsAsync(FilterModel filter, CancellationToken cancellationToken = default);
 }

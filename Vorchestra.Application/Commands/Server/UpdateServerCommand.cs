@@ -7,17 +7,17 @@ using Vorchestra.DTOs;
 
 namespace Vorchestra.Application.Commands.Server;
 
-public class UpdateServerCommand : UpdateServerDto, IRequest<ResponseModel<string>>
+public class UpdateServerCommand : UpdateServerDto, IRequest<ResponseModel<Guid>>
 {
 }
-public class UpdateServerCommandHandler : IRequestHandler<UpdateServerCommand, ResponseModel<string>>
+public class UpdateServerCommandHandler : IRequestHandler<UpdateServerCommand, ResponseModel<Guid>>
 {
     private readonly IServerService _serverService;
     public UpdateServerCommandHandler(IServerService serverService)
     {
         _serverService = serverService;
     }
-    public async Task<ResponseModel<string>> Handle(UpdateServerCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseModel<Guid>> Handle(UpdateServerCommand request, CancellationToken cancellationToken)
     {
         ConstantValidator.Validate<ServerStatus>(request.Status);
 

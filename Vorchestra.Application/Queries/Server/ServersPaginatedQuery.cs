@@ -26,6 +26,16 @@ public class ServersPaginatedQueryHandler : IRequestHandler<ServersPaginatedQuer
     {
         ConstantValidator.Validate<ServerStatus>(request.Status);
 
-        return await _serverService.GetPaginatedServersAsync(request.PageNumber, request.PageSize, request.Status, request.Name, cancellationToken);
+        var filterModel = new FilterModel
+        {
+            Page = request.PageNumber,
+            PageSize = request.PageSize,
+            Filters = new Dictionary<string, object>()
+            {
+                { nameof(Domain.DataModels.Server.Status), request.Status },
+                { nameof(Domain.DataModels.Server.Name), request.Name }
+            }
+        };
+        return await _serverService.GetPaginatedServersAsync(filterModel, cancellationToken);
     }
 }
