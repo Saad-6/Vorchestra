@@ -20,7 +20,7 @@ public class TenantSubscribePlanCommandHandler : IRequestHandler<TenantSubscribe
     }
     public async Task<ResponseModel<string>> Handle(TenantSubscribePlanCommand request, CancellationToken cancellationToken)
     {
-        ConstantValidator.Validate<BillingCycle>(request.BillngCycle);
+        ConstantValidator.Validate<BillingCycle>(request.BillingCycle);
 
         return await _tenantService.ApplyPlanAsync(request, cancellationToken);
     }

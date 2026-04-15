@@ -128,6 +128,27 @@ public class ScriptService : IScriptService
         };
     }
 
+    public async Task<ResponseModel<List<ScriptViewDto>>> GetScriptsByIdsAsync(List<Guid> scriptIds, CancellationToken cancellationToken = default)
+    {
+        var scripts = await _context.Scripts
+            .Where(s => scriptIds.Contains(s.Id))
+            .Select(s => new ScriptViewDto
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Description = s.Description,
+                Content = s.Content
+            })
+            .ToListAsync(cancellationToken);
+
+        return new ResponseModel<List<ScriptViewDto>>
+        {
+            Success = true,
+            Message = "Scripts retrieved successfully.",
+            Data = scripts
+        };
+    }
+
     public async Task<ResponseModel<Guid>> UpdateScriptAsync(UpdateScriptDto script, CancellationToken cancellationToken = default)
     {
         var existingScript = await _context.Scripts.FindAsync(new object[] { script.Id }, cancellationToken);

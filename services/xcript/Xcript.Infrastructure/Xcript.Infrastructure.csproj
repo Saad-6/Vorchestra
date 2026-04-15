@@ -7,6 +7,8 @@
   </PropertyGroup>
 	
 	<ItemGroup>
+		<PackageReference Include="MassTransit" Version="9.1.0" />
+		<PackageReference Include="MassTransit.RabbitMQ" Version="9.1.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.14" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.14">
 			<PrivateAssets>all</PrivateAssets>
@@ -16,6 +18,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <ProjectReference Include="..\..\..\Shared.Contracts\Shared.Contracts.csproj" />
 	  <ProjectReference Include="..\Xcript.Application\Xcript.Application.csproj" />
 	  <ProjectReference Include="..\Xcript.Domain\Xcript.Domain.csproj" />
 	  <ProjectReference Include="..\..\..\shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />

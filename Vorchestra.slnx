@@ -1,11 +1,18 @@
 <Solution>
   <Folder Name="/Services/" />
+  <Folder Name="/Services/Vbaton/">
+    <Project Path="Vbarton.API/Vbaton.API.csproj" Id="a570449d-0904-43af-942e-d2ae8c6e871b" />
+    <Project Path="Vbaton.Application/Vbaton.Application.csproj" Id="ec52f0a1-c082-4a11-9a07-04353f1c4ec1" />
+    <Project Path="Vbaton.Domain/Vbaton.Domain.csproj" Id="b174d9c6-066c-435d-a58a-3e517ee1d4f0" />
+    <Project Path="Vbaton.DTO/Vbaton.DTO.csproj" Id="60820a2d-b205-45a7-bd8e-fdd4ef78ecff" />
+    <Project Path="Vbaton.Infrastructure/Vbaton.Infrastructure.csproj" Id="c95db2ed-d4d7-4eae-b3d0-f1387840e6fa" />
+  </Folder>
   <Folder Name="/Services/Vorchestra/">
-    <Project Path="services/vorchestra/Vorchestra/Vorchestra.Domain.csproj" />
     <Project Path="services/vorchestra/Vorchestra.API/Vorchestra.API.csproj" Id="95eef835-e2cb-421d-aabb-1574e6b19dcc" />
     <Project Path="services/vorchestra/Vorchestra.Application/Vorchestra.Application.csproj" />
     <Project Path="services/vorchestra/Vorchestra.DTOs/Vorchestra.DTOs.csproj" />
     <Project Path="services/vorchestra/Vorchestra.Infrastructure/Vorchestra.Infrastructure.csproj" />
+    <Project Path="services/vorchestra/Vorchestra/Vorchestra.Domain.csproj" />
   </Folder>
   <Folder Name="/Services/Xcript/">
     <Project Path="services/xcript/Xcript.API/Xcript.API.csproj" Id="b743d73d-06dc-4ab4-8fad-cddb403553bd" />
@@ -15,6 +22,8 @@
     <Project Path="services/xcript/Xcript.Infrastructure/Xcript.Infrastructure.csproj" Id="0428f72c-9715-4848-a507-0b22d5802392" />
   </Folder>
   <Folder Name="/Shared/">
+    <Project Path="Shared.Contracts/Shared.Contracts.csproj" Id="4b9c866e-fc8f-4f97-b7f3-922e7c2758dc" />
+    <Project Path="Shared.DTO/Shared.DTO.csproj" Id="03617871-a04e-45c4-aded-0d76b4c869de" />
     <Project Path="shared/Shared.Application/Shared.Application.csproj" Id="cc9de640-303f-43b4-88f9-09edb50dba83" />
     <Project Path="shared/Shared.Domain/Shared.Domain.csproj" Id="3f840d5e-0d72-4b91-b56e-62a98f7bbeab" />
     <Project Path="shared/Shared.Infrastructure/Shared.Infrastructure.csproj" Id="758930ca-fba0-4c4b-a42d-46dc1d8e9e53" />
