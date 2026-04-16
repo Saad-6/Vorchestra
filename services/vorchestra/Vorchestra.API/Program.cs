@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddCorsPolicy();
 builder.Services.AddControllers();
 builder.Services.AddSwagger("Vorchestra API");
 builder.Services.AddOpenApi();
@@ -24,6 +25,8 @@ using (var scope = app.Services.CreateScope())
 app.UseSwaggerDocs("Vorchestra API");
 
 app.UseHttpsRedirection();
+
+app.UseCorsPolicy();
 
 app.UseAuthentication();
 

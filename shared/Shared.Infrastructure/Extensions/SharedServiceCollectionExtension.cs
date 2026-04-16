@@ -51,20 +51,44 @@ public static class SharedServiceCollectionExtension
         return app;
     }
 
+    public static IServiceCollection AddCorsPolicy(this IServiceCollection services, string[]? origins = null)
+    {
+        var allowedOrigins = origins ?? ["http://localhost:3000", "https://localhost:3000"];
+
+        services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.WithOrigins(allowedOrigins)
+                      .AllowAnyHeader()
+                      .AllowAnyMethod()
+                      .AllowCredentials();
+            });
+        });
+
+        return services;
+    }
+
+    public static WebApplication UseCorsPolicy(this WebApplication app)
+    {
+        app.UseCors();
+        return app;
+    }
+
     public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.ASCII.GetBytes(configuration["Jwt:Secret"] ?? string.Empty)),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+        //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        //    .AddJwtBearer(options =>
+        //    {
+        //        options.TokenValidationParameters = new TokenValidationParameters
+        //        {
+        //            ValidateIssuerSigningKey = true,
+        //            IssuerSigningKey = new SymmetricSecurityKey(
+        //                Encoding.ASCII.GetBytes(configuration["Jwt:Secret"] ?? string.Empty)),
+        //            ValidateIssuer = false,
+        //            ValidateAudience = false
+        //        };
+        //    });
 
         return services;
     }

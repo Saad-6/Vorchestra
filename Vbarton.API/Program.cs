@@ -9,6 +9,7 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddSwagger("Vbaton API");
 builder.Services.AddOpenApi();
+builder.Services.AddCorsPolicy();
 
 var app = builder.Build();
 
@@ -21,7 +22,7 @@ using (var scope = app.Services.CreateScope())
 app.UseSwaggerDocs("Vbaton API");
 
 app.UseHttpsRedirection();
-
+app.UseCorsPolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 

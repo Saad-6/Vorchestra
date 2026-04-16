@@ -33,7 +33,7 @@ public class ScriptGroupService : IScriptGroupService
         if (order < 1)
             order = 1;
         var orderExists = scriptGroups?.Any(m => m.Order == order) ?? false;
-        var maxOrder = scriptGroups?.Max(m => m.Order) ?? 0;
+        var maxOrder = scriptGroups.Any() ? (scriptGroups?.Max(m => m.Order) ?? 0) : 0;
 
         if (orderExists)
         {

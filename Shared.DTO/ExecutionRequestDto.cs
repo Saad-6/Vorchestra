@@ -10,6 +10,4 @@ public class ExecutionRequestCommand
 
     public List<Guid>? ScriptIds { get; set; }    
 
-    public Dictionary<string, string> VariableContext { get; set; } = new();
-
 }

@@ -213,6 +213,7 @@ public class TenantService : ITenantService
         newTenant.Domain = tenant.Domain;
         newTenant.Slug = tenant.Slug;
         newTenant.Identifier = tenant.Domain + tenant.Slug;
+        newTenant.PhoneNumber = tenant.PhoneNumber;
 
         await _context.AddAsync(newTenant, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);

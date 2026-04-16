@@ -79,6 +79,9 @@ public class ScriptService : IScriptService
         
         query = filter.ApplyFilters(query);
 
+
+        var stringQuery = query.ToQueryString();
+
         var totalCount = await query.CountAsync(cancellationToken);
 
         var scripts = await query

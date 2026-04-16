@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using MediatR;
 using Shared.Application.Models;
 using Shared.Contracts.RequestModels;
@@ -6,6 +7,7 @@ using Shared.DTO;
 using Vbaton.Application.Interfaces;
 using Vbaton.Application.Models;
 using Vbaton.Application.Producers;
+using Vbaton.Application.Resolution;
 
 namespace Vbaton.Application.Commands;
 
@@ -15,6 +17,9 @@ public class ExecuteWorkFlowCommand : ExecutionRequestCommand, IRequest<Response
 
 public class ExecuteWorkFlowCommandHandler : IRequestHandler<ExecuteWorkFlowCommand, ResponseModel<string>>
 {
+    // Matches {{Tenant.Slug}}, {{Server.IpAddress}}, etc. — compiled once, shared across all requests.
+    private static readonly Regex PlaceholderPattern = new(@"\{\{([^}]+)\}\}", RegexOptions.Compiled);
+
     private readonly ISshService _sshService;
     private readonly IScriptEventPublisher _scriptEventPublisher;
     private readonly ILogService _logService;
@@ -73,16 +78,22 @@ public class ExecuteWorkFlowCommandHandler : IRequestHandler<ExecuteWorkFlowComm
         };
     }
 
-    private void SubstituteVariables(ExecutionRequestCommand executionRequest, List<ScriptResponse>? scripts)
+    private static void SubstituteVariables(ExecutionRequestCommand request, List<ScriptResponse>? scripts)
     {
         if (scripts == null) return;
 
+        // Resolve all variables once for the entire request, not per script.
+        var context = VariableMap.BuildContext(request);
+
         foreach (var script in scripts)
         {
-            foreach (var variable in executionRequest.VariableContext)
+            // Single regex pass per script — O(n) where n = script content length.
+            // Unresolved placeholders (no matching source) are left as-is.
+            script.Content = PlaceholderPattern.Replace(script.Content, match =>
             {
-                script.Content = script.Content.Replace($"{{{{{variable.Key}}}}}", variable.Value);
-            }
+                var source = match.Groups[1].Value;
+                return context.TryGetValue(source, out var value) ? value : match.Value;
+            });
         }
     }
 }
