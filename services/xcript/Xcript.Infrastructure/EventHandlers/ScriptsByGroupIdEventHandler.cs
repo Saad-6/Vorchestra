@@ -33,7 +33,12 @@ public class ScriptsByGroupIdEventHandler : IConsumer<ScriptsByGroupIdRequest>
                     Name = s.Name,
                     Content = s.Content,
                     Description = s.Description,
-                    Order = s?.Order ?? 0
+                    Order = s?.Order ?? 0,
+                    Variables = s.Variables.Select(v => new ScriptVariableInfo
+                    {
+                        Name = v.Name,
+                        Source = v.Source
+                    }).ToList()
                 }).ToList() ?? new List<ScriptResponse>()
             }
         };

@@ -61,7 +61,9 @@ public class ScriptService : IScriptService
                 Data = null
             };
         }
+        var scriptGroups = await _context.ScriptGroups.Where(s => s.ScriptId == scriptId).ToListAsync();
 
+        _context.RemoveRange(scriptGroups);
         _context.Scripts.Remove(script);
         await _context.SaveChangesAsync(cancellationToken);
 
@@ -78,9 +80,6 @@ public class ScriptService : IScriptService
         var query = _context.Scripts.AsNoTracking();
         
         query = filter.ApplyFilters(query);
-
-
-        var stringQuery = query.ToQueryString();
 
         var totalCount = await query.CountAsync(cancellationToken);
 
@@ -140,7 +139,13 @@ public class ScriptService : IScriptService
                 Id = s.Id,
                 Name = s.Name,
                 Description = s.Description,
-                Content = s.Content
+                Content = s.Content,
+                Variables = (
+                    from sv in _context.ScriptVariables
+                    join v in _context.Variables on sv.VariableId equals v.Id
+                    where sv.ScriptId == s.Id
+                    select new ScriptVariableViewDto { Name = v.Name, Source = v.Source }
+                ).ToList()
             })
             .ToListAsync(cancellationToken);
 

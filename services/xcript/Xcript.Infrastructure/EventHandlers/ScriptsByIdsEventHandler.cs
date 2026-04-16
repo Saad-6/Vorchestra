@@ -32,6 +32,11 @@ public class ScriptsByIdsEventHandler : IConsumer<ScriptsByIdsRequest>
                     Name = s.Name,
                     Content = s.Content,
                     Description = s.Description,
+                    Variables = s.Variables.Select(v => new ScriptVariableInfo
+                    {
+                        Name = v.Name,
+                        Source = v.Source
+                    }).ToList()
                 }).ToList()
             } : null
         };

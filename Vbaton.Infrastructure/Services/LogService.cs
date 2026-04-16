@@ -33,7 +33,8 @@ public class LogService : ILogService
             ExecutionLogId = executionLog.Id,
             ScriptId = so.ScriptId,
             Output = so.Output,
-            Succeeded = so.Succeeded
+            Succeeded = so.Succeeded,
+            Message = string.Empty
         }).ToList();
 
         _logger.LogInformation("Logging execution result for GroupId: {GroupId}, ServerId: {ServerId}, TenantId: {TenantId}, Succeeded: {Succeeded}", groupId, request.Server?.Id, request.Tenant?.Id, succeeded);

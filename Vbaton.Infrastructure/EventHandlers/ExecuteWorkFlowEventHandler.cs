@@ -20,7 +20,6 @@ public class ExecuteWorkFlowEventHandler : IConsumer<ExecutionRequestCommand>
             Tenant = context.Message.Tenant,
             GroupId = context.Message.GroupId,
             ScriptIds = context.Message.ScriptIds,
-            VariableContext = context.Message.VariableContext
         };
 
         var response = await _mediator.Send(command);

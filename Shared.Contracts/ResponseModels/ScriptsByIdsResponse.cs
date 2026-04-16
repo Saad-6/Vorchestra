@@ -13,4 +13,15 @@ public class ScriptResponse
     public string Content { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public int Order { get; set; }
+    public List<ScriptVariableInfo> Variables { get; set; } = [];
+}
+
+/// <summary>
+/// Carries the variable Name (placeholder in script content) and Source (runtime resolution key)
+/// so Vbaton can substitute {{name}} → resolved value without calling back to Xcript.
+/// </summary>
+public class ScriptVariableInfo
+{
+    public string Name { get; set; } = string.Empty;
+    public string Source { get; set; } = string.Empty;
 }

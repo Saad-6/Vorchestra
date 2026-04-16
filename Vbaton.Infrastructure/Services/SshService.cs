@@ -38,7 +38,7 @@ public class SshService : ISshService
 
             foreach (var script in scripts.OrderBy(s => s.Order))
             {
-                var output = await ExecuteScriptAsync(sshClient, sftpClient, script);
+                var output = await ExecuteScriptAsync(sshClient, sftpClient, script, server.DefaultDirectory);
                 scriptOutputs.Add(output);
 
                 if (!output.Succeeded)
@@ -74,7 +74,7 @@ public class SshService : ISshService
         };
     }
 
-    private async Task<ScriptOutputModel> ExecuteScriptAsync(SshClient sshClient, SftpClient sftpClient, ScriptResponse script)
+    private async Task<ScriptOutputModel> ExecuteScriptAsync(SshClient sshClient, SftpClient sftpClient, ScriptResponse script, string? workingDirectory = null)
     {
         var tempPath = $"/tmp/vbaton_{Guid.NewGuid():N}.sh";
 
@@ -82,8 +82,16 @@ public class SshService : ISshService
 
         try
         {
+            // Prepend a cd to the server's default directory as the first line of the script.
+            // Each CreateCommand opens a new channel, so a standalone cd wouldn't persist.
+            // Embedding it here means it runs once at script start; subsequent cd commands
+            // inside the script are free to navigate wherever they need.
+            var scriptContent = string.IsNullOrWhiteSpace(workingDirectory)
+                ? $"set -e\n{script.Content}"
+                : $"set -e\ncd \"{workingDirectory}\"\n{script.Content}";
+
             // Upload to a temp file so multi-line scripts and special characters are handled safely
-            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(script.Content));
+            using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(scriptContent));
             await Task.Run(() => sftpClient.UploadFile(stream, tempPath));
 
             await Task.Run(() => sshClient.CreateCommand($"chmod +x {tempPath}").Execute());

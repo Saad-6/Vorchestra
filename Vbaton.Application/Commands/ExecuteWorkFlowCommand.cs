@@ -82,17 +82,27 @@ public class ExecuteWorkFlowCommandHandler : IRequestHandler<ExecuteWorkFlowComm
     {
         if (scripts == null) return;
 
-        // Resolve all variables once for the entire request, not per script.
-        var context = VariableMap.BuildContext(request);
+        // Resolve all sources once for the entire request — shared across all scripts.
+        var sourceContext = VariableMap.BuildContext(request);
 
         foreach (var script in scripts)
         {
+            if (script.Variables is not { Count: > 0 }) continue;
+
+            // Build a name→value map for this script's declared variables.
+            // name = the {{placeholder}} in script content, value = resolved from source.
+            var nameContext = script.Variables
+                .Where(v => sourceContext.ContainsKey(v.Source))
+                .ToDictionary(v => v.Name, v => sourceContext[v.Source]);
+
+            if (nameContext.Count == 0) continue;
+
             // Single regex pass per script — O(n) where n = script content length.
-            // Unresolved placeholders (no matching source) are left as-is.
+            // Undeclared or unresolvable placeholders are left unchanged.
             script.Content = PlaceholderPattern.Replace(script.Content, match =>
             {
-                var source = match.Groups[1].Value;
-                return context.TryGetValue(source, out var value) ? value : match.Value;
+                var name = match.Groups[1].Value;
+                return nameContext.TryGetValue(name, out var value) ? value : match.Value;
             });
         }
     }

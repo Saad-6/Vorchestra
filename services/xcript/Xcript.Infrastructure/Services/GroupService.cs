@@ -57,6 +57,9 @@ public class GroupService : IGroupService
             };
         }
 
+        var scriptGroups = _context.ScriptGroups.Where(g => g.GroupId == groupId).ToListAsync();
+
+        _context.RemoveRange(scriptGroups);
         _context.Groups.Remove(group);
         await _context.SaveChangesAsync(cancellationToken);
 
@@ -89,7 +92,13 @@ public class GroupService : IGroupService
                         Id = s.Id,
                         Name = s.Name,
                         Content = s.Content,
-                        Order = sg.Order
+                        Order = sg.Order,
+                        Variables = (
+                            from sv in _context.ScriptVariables
+                            join v in _context.Variables on sv.VariableId equals v.Id
+                            where sv.ScriptId == s.Id
+                            select new ScriptVariableViewDto { Name = v.Name, Source = v.Source }
+                        ).ToList()
                     }
                 ).ToList()
             })

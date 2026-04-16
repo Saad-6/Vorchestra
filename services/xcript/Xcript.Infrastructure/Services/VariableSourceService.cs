@@ -10,12 +10,12 @@ public class VariableSourceService : IVariableSourceService
 
     public Task<ResponseModel<IEnumerable<string>>> GetAvailableSourcesAsync()
     {
-        var sources = typeof(TenantVariableSource)
+        var sources = typeof(ScriptVariableSource.Tenant)
             .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
             .Where(f => f.IsLiteral && !f.IsInitOnly)
             .Select(f => (string)f.GetRawConstantValue())
             .Concat(
-                typeof(ServerVariableSource)
+                typeof(ScriptVariableSource.Server)
                     .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
                     .Where(f => f.IsLiteral && !f.IsInitOnly)
                     .Select(f => (string)f.GetRawConstantValue())
