@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Shared.Application.Models;
+using Vorchestra.Application.Commands.Project;
 using Vorchestra.Application.Interfaces;
 using Vorchestra.Domain.DataModels;
 using Vorchestra.DTOs;
@@ -9,13 +10,23 @@ namespace Vochestra.Infrastructure.Services;
 public class ProjectService : IProjectService
 {
     private readonly VorchestraDbContext _context;
-    public ProjectService(VorchestraDbContext context)
+    private readonly IFileStorageService _fileStorageService; 
+    public ProjectService(VorchestraDbContext context, IFileStorageService fileStorageService)
     {
         _context = context;
     }
 
-    public async Task<ResponseModel<Guid>> CreateProjectAsync(CreateProjectDto project)
+    public async Task<ResponseModel<Guid>> CreateProjectAsync(CreateProjectCommand project)
     {
+        var hasUrl = !string.IsNullOrWhiteSpace(project.Url);
+        var hasZip = !string.IsNullOrWhiteSpace(project.ZipFilePath);
+
+        if (!hasUrl && !hasZip)
+            return new ResponseModel<Guid> { Success = false, Message = "Either a URL or a zip file must be provided.", Data = Guid.Empty };
+
+        if (hasUrl && hasZip)
+            return new ResponseModel<Guid> { Success = false, Message = "Provide either a URL or a zip file, not both.", Data = Guid.Empty };
+
         var nameCheck = await _context.Projects.AnyAsync(p => p.Name == project.Name);
         if (nameCheck)
         {
@@ -36,6 +47,7 @@ public class ProjectService : IProjectService
             IsRelative = project.IsRelative,
             Branch = project.Branch,
             PersonalAccessToken = project.PersonalAccessToken,
+            ZipFilePath = project.ZipFilePath,
             CreatedAt = DateTimeOffset.UtcNow,
             UpdatedAt = DateTimeOffset.UtcNow
         };
@@ -91,7 +103,8 @@ public class ProjectService : IProjectService
                 Description = p.Description,
                 Url = p.Url,
                 IsRelative = p.IsRelative,
-                Branch = p.Branch
+                Branch = p.Branch,
+                ZipFilePath = p.ZipFilePath
             })
             .ToListAsync(cancellationToken);
 
@@ -106,8 +119,18 @@ public class ProjectService : IProjectService
         };
     }
 
-    public async Task<ResponseModel<Guid>> UpdateProjectAsync(UpdateProjectDto project)
+    public async Task<ResponseModel<Guid>> UpdateProjectAsync(UpdateProjectCommand project)
     {
+        var hasUrl = !string.IsNullOrWhiteSpace(project.Url);
+        var hasZip = !string.IsNullOrWhiteSpace(project.ZipFilePath);
+
+        if (!hasUrl && !hasZip)
+            return new ResponseModel<Guid> { Success = false, Message = "Either a URL or a zip file must be provided.", Data = Guid.Empty };
+
+        if (hasUrl && hasZip)
+            return new ResponseModel<Guid> { Success = false, Message = "Provide either a URL or a zip file, not both.", Data = Guid.Empty };
+
+
         var existingProject = await _context.Projects.FirstOrDefaultAsync(p => p.Id == project.Id);
         if (existingProject == null)
         {
@@ -130,12 +153,18 @@ public class ProjectService : IProjectService
             };
         }
 
+        if (hasZip)
+        {
+            _fileStorageService.DeleteFile(existingProject.ZipFilePath);
+        }
+
         existingProject.Name = project.Name;
         existingProject.Description = project.Description;
         existingProject.Url = project.Url;
         existingProject.IsRelative = project.IsRelative;
         existingProject.Branch = project.Branch;
         existingProject.PersonalAccessToken = project.PersonalAccessToken;
+        existingProject.ZipFilePath = project.ZipFilePath;
         existingProject.UpdatedAt = DateTimeOffset.UtcNow;
 
         _context.Projects.Update(existingProject);

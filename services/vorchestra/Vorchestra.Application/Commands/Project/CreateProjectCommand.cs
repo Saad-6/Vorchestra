@@ -7,6 +7,7 @@ namespace Vorchestra.Application.Commands.Project;
 
 public class CreateProjectCommand : CreateProjectDto, IRequest<ResponseModel<Guid>>
 {
+    public string? ZipFilePath { get; set; }
 }
 
 public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, ResponseModel<Guid>>

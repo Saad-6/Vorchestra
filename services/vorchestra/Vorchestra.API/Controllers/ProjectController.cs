@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Vorchestra.Application.Commands.Project;
+using Vorchestra.Application.Interfaces;
 using Vorchestra.Application.Queries.Project;
 
 namespace Vorchestra.API.Controllers;
@@ -10,9 +11,12 @@ namespace Vorchestra.API.Controllers;
 public class ProjectController : ControllerBase
 {
     private readonly IMediator _mediator;
-    public ProjectController(IMediator mediator)
+    private readonly IFileStorageService _fileStorageService;
+
+    public ProjectController(IMediator mediator, IFileStorageService fileStorageService)
     {
         _mediator = mediator;
+        _fileStorageService = fileStorageService;
     }
 
     [HttpGet]
@@ -27,8 +31,12 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> Post([FromBody] CreateProjectCommand command, CancellationToken cancellationToken)
+    [Consumes("multipart/form-data")]
+    public async Task<ActionResult> Post([FromForm] CreateProjectCommand command, IFormFile? zipFile, CancellationToken cancellationToken)
     {
+        if (zipFile != null)
+            command.ZipFilePath = await _fileStorageService.SaveProjectZipAsync(zipFile.OpenReadStream(), zipFile.FileName);
+
         var result = await _mediator.Send(command, cancellationToken);
 
         if (result.Success)
@@ -38,8 +46,12 @@ public class ProjectController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult> Put([FromBody] UpdateProjectCommand command, CancellationToken cancellationToken)
+    [Consumes("multipart/form-data")]
+    public async Task<ActionResult> Put([FromForm] UpdateProjectCommand command, IFormFile? zipFile, CancellationToken cancellationToken)
     {
+        if (zipFile != null)
+            command.ZipFilePath = await _fileStorageService.SaveProjectZipAsync(zipFile.OpenReadStream(), zipFile.FileName);
+
         var result = await _mediator.Send(command, cancellationToken);
 
         if (result.Success)

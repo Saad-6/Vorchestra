@@ -7,6 +7,7 @@ namespace Vorchestra.Application.Commands.Project;
 
 public class UpdateProjectCommand : UpdateProjectDto, IRequest<ResponseModel<Guid>>
 {
+    public string? ZipFilePath { get; set; }
 }
 
 public class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand, ResponseModel<Guid>>

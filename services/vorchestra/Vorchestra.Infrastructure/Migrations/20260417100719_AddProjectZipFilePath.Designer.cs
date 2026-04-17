@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Vochestra.Infrastructure;
@@ -11,9 +12,11 @@ using Vochestra.Infrastructure;
 namespace Vorchestra.Infrastructure.Migrations
 {
     [DbContext(typeof(VorchestraDbContext))]
-    partial class VorchestraDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260417100719_AddProjectZipFilePath")]
+    partial class AddProjectZipFilePath
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
