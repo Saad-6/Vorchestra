@@ -14,6 +14,7 @@ public class ProjectService : IProjectService
     public ProjectService(VorchestraDbContext context, IFileStorageService fileStorageService)
     {
         _context = context;
+        _fileStorageService = fileStorageService;
     }
 
     public async Task<ResponseModel<Guid>> CreateProjectAsync(CreateProjectCommand project)

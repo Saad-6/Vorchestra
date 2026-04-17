@@ -12,8 +12,8 @@ using Vochestra.Infrastructure;
 namespace Vorchestra.Infrastructure.Migrations
 {
     [DbContext(typeof(VorchestraDbContext))]
-    [Migration("20260417100719_AddProjectZipFilePath")]
-    partial class AddProjectZipFilePath
+    [Migration("20260417103153_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

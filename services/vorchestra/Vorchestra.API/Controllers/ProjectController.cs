@@ -35,7 +35,7 @@ public class ProjectController : ControllerBase
     public async Task<ActionResult> Post([FromForm] CreateProjectCommand command, IFormFile? zipFile, CancellationToken cancellationToken)
     {
         if (zipFile != null)
-            command.ZipFilePath = await _fileStorageService.SaveProjectZipAsync(zipFile.OpenReadStream(), zipFile.FileName);
+            command.ZipFilePath = await _fileStorageService.SaveFileAsync(zipFile.OpenReadStream(), zipFile.FileName);
 
         var result = await _mediator.Send(command, cancellationToken);
 
@@ -50,7 +50,7 @@ public class ProjectController : ControllerBase
     public async Task<ActionResult> Put([FromForm] UpdateProjectCommand command, IFormFile? zipFile, CancellationToken cancellationToken)
     {
         if (zipFile != null)
-            command.ZipFilePath = await _fileStorageService.SaveProjectZipAsync(zipFile.OpenReadStream(), zipFile.FileName);
+            command.ZipFilePath = await _fileStorageService.SaveFileAsync(zipFile.OpenReadStream(), zipFile.FileName);
 
         var result = await _mediator.Send(command, cancellationToken);
 

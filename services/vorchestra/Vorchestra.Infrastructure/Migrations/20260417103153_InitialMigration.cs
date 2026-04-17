@@ -16,6 +16,7 @@ namespace Vorchestra.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProjectId = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Slug = table.Column<string>(type: "text", nullable: false),
                     MonthlyPrice = table.Column<decimal>(type: "numeric", nullable: false),
@@ -48,6 +49,26 @@ namespace Vorchestra.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PlanSubscriptionHistory", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Projects",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    Url = table.Column<string>(type: "text", nullable: true),
+                    IsRelative = table.Column<bool>(type: "boolean", nullable: false),
+                    Branch = table.Column<string>(type: "text", nullable: true),
+                    PersonalAccessToken = table.Column<string>(type: "text", nullable: true),
+                    ZipFilePath = table.Column<string>(type: "text", nullable: true),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Projects", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -116,6 +137,9 @@ namespace Vorchestra.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "PlanSubscriptionHistory");
+
+            migrationBuilder.DropTable(
+                name: "Projects");
 
             migrationBuilder.DropTable(
                 name: "Servers");
