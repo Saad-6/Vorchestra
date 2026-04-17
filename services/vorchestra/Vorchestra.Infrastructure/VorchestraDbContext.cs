@@ -10,6 +10,7 @@ public class VorchestraDbContext : DbContext
     }
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<Server> Servers { get; set; }
+    public DbSet<Project> Projects { get; set; }
     public DbSet<Plan> Plans { get; set; }
     public DbSet<PlanSubscriptionHistory> PlanSubscriptionHistory { get; set; }
 

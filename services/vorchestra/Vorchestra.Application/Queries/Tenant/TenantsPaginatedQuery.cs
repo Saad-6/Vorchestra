@@ -12,7 +12,7 @@ public class TenantsPaginatedQuery : IRequest<ResponseModel<List<TenantViewDto>>
     public int PageNumber { get; set; }
     public int PageSize { get; set; }
     public string? Status { get; set; }
-    public string? Name { get; set; }
+    public string? SearchTerm { get; set; }
 }
 public class TenantsPaginatedQueryHandler : IRequestHandler<TenantsPaginatedQuery, ResponseModel<List<TenantViewDto>>>
 {
@@ -32,7 +32,7 @@ public class TenantsPaginatedQueryHandler : IRequestHandler<TenantsPaginatedQuer
             Filters = new Dictionary<string, object>()
             {
                 {nameof(Domain.DataModels.Tenant.Status), request.Status ?? string.Empty},
-                {nameof(Domain.DataModels.Tenant.Name), request.Name ?? string.Empty}
+                {nameof(Domain.DataModels.Tenant.Name), request.SearchTerm ?? string.Empty}
             }
         };
 

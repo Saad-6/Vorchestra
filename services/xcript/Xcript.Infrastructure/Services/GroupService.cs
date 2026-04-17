@@ -125,6 +125,8 @@ public class GroupService : IGroupService
 
         query = filter.ApplyFilters(query);
 
+        var stringQuery = query.ToQueryString();
+
         var totalCount = await query.CountAsync(cancellationToken);
 
         var groups = await query

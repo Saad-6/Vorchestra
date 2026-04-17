@@ -15,6 +15,17 @@ public class PlanService : IPlanService
     }
     public async Task<ResponseModel<Guid>> CreatePlanAsync(CreatePlanDto plan)
     {
+        var projectExists = await _context.Projects.AnyAsync(p => p.Id == plan.ProjectId);
+        if (!projectExists)
+        {
+            return new ResponseModel<Guid>
+            {
+                Success = false,
+                Message = "The specified project does not exist.",
+                Data = Guid.Empty
+            };
+        }
+
         var existingPlan = await _context.Plans.AnyAsync(p => p.Name == plan.Name || p.Slug == plan.Slug);
         if (existingPlan)
         {
@@ -29,6 +40,7 @@ public class PlanService : IPlanService
         var newPlan = new Plan
         {
             Id = Guid.NewGuid(),
+            ProjectId = plan.ProjectId,
             Name = plan.Name,
             Slug = plan.Slug,
             MonthlyPrice = plan.MonthlyPrice,
@@ -84,6 +96,7 @@ public class PlanService : IPlanService
         var planDtos = plans.Select(p => new PlanViewDto
         {
             Id = p.Id,
+            ProjectId = p.ProjectId,
             Name = p.Name,
             Slug = p.Slug,
             MonthlyPrice = p.MonthlyPrice,
@@ -115,6 +128,17 @@ public class PlanService : IPlanService
             };
         }
 
+        var projectExists = await _context.Projects.AnyAsync(p => p.Id == plan.ProjectId);
+        if (!projectExists)
+        {
+            return new ResponseModel<Guid>
+            {
+                Success = false,
+                Message = "The specified project does not exist.",
+                Data = Guid.Empty
+            };
+        }
+
         var nameCheck = await _context.Plans.AnyAsync(p => (p.Name == plan.Name || p.Slug == plan.Slug) && p.Id != plan.Id);
         if(nameCheck)
         {
@@ -126,6 +150,7 @@ public class PlanService : IPlanService
             };
         }
 
+        existingPlan.ProjectId = plan.ProjectId;
         existingPlan.Name = plan.Name;
         existingPlan.Slug = plan.Slug;
         existingPlan.MonthlyPrice = plan.MonthlyPrice;

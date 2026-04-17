@@ -29,6 +29,8 @@ public static class ServiceCollectionExtension
 
         services.AddScoped<ITenantService, TenantService>();
 
+        services.AddScoped<IProjectService, ProjectService>();
+
         services.AddScoped<IPlanService, PlanService>();
 
         return services;

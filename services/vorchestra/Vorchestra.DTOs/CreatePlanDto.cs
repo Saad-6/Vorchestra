@@ -2,6 +2,7 @@
 
 public class CreatePlanDto
 {
+    public Guid ProjectId { get; set; }
     public string Name { get; set; }
     public string Slug { get; set; }
     public decimal MonthlyPrice { get; set; }

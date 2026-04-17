@@ -12,7 +12,7 @@ public class ServersPaginatedQuery : IRequest<ResponseModel<List<ServerViewDto>>
     public int PageNumber { get; set; }
     public int PageSize { get; set; }
     public string? Status { get; set; }
-    public string? Name { get; set; }
+    public string? SearchTerm { get; set; }
 }
 
 public class ServersPaginatedQueryHandler : IRequestHandler<ServersPaginatedQuery, ResponseModel<List<ServerViewDto>>>
@@ -33,7 +33,7 @@ public class ServersPaginatedQueryHandler : IRequestHandler<ServersPaginatedQuer
             Filters = new Dictionary<string, object>()
             {
                 { nameof(Domain.DataModels.Server.Status), request.Status },
-                { nameof(Domain.DataModels.Server.Name), request.Name }
+                { nameof(Domain.DataModels.Server.Name), request.SearchTerm }
             }
         };
         return await _serverService.GetPaginatedServersAsync(filterModel, cancellationToken);
