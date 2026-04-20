@@ -21,9 +21,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Vbaton.Application\Vbaton.Application.csproj" />
     <ProjectReference Include="..\Vbaton.Domain\Vbaton.Domain.csproj" />
-    <ProjectReference Include="..\shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
-    <ProjectReference Include="..\Shared.Contracts\Shared.Contracts.csproj" />
-    <ProjectReference Include="..\Shared.DTO\Shared.DTO.csproj" />
+    <ProjectReference Include="..\..\..\shared\Shared.Infrastructure\Shared.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\Shared.Contracts\Shared.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Shared.DTO\Shared.DTO.csproj" />
   </ItemGroup>
 
 </Project>

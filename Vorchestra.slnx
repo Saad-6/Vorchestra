@@ -1,11 +1,11 @@
 <Solution>
   <Folder Name="/Services/" />
   <Folder Name="/Services/Vbaton/">
-    <Project Path="Vbarton.API/Vbaton.API.csproj" Id="a570449d-0904-43af-942e-d2ae8c6e871b" />
-    <Project Path="Vbaton.Application/Vbaton.Application.csproj" Id="ec52f0a1-c082-4a11-9a07-04353f1c4ec1" />
-    <Project Path="Vbaton.Domain/Vbaton.Domain.csproj" Id="b174d9c6-066c-435d-a58a-3e517ee1d4f0" />
-    <Project Path="Vbaton.DTO/Vbaton.DTO.csproj" Id="60820a2d-b205-45a7-bd8e-fdd4ef78ecff" />
-    <Project Path="Vbaton.Infrastructure/Vbaton.Infrastructure.csproj" Id="c95db2ed-d4d7-4eae-b3d0-f1387840e6fa" />
+    <Project Path="services/vbaton/Vbarton.API/Vbaton.API.csproj" Id="a570449d-0904-43af-942e-d2ae8c6e871b" />
+    <Project Path="services/vbaton/Vbaton.Application/Vbaton.Application.csproj" Id="ec52f0a1-c082-4a11-9a07-04353f1c4ec1" />
+    <Project Path="services/vbaton/Vbaton.Domain/Vbaton.Domain.csproj" Id="b174d9c6-066c-435d-a58a-3e517ee1d4f0" />
+    <Project Path="services/vbaton/Vbaton.DTO/Vbaton.DTO.csproj" Id="60820a2d-b205-45a7-bd8e-fdd4ef78ecff" />
+    <Project Path="services/vbaton/Vbaton.Infrastructure/Vbaton.Infrastructure.csproj" Id="c95db2ed-d4d7-4eae-b3d0-f1387840e6fa" />
   </Folder>
   <Folder Name="/Services/Vorchestra/">
     <Project Path="services/vorchestra/Vorchestra.API/Vorchestra.API.csproj" Id="95eef835-e2cb-421d-aabb-1574e6b19dcc" />
