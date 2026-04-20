@@ -11,7 +11,7 @@ using Vbaton.Application.Resolution;
 
 namespace Vbaton.Application.Commands;
 
-public class ExecuteWorkFlowCommand : ExecutionRequestCommand, IRequest<ResponseModel<string>>
+public class ExecuteWorkFlowCommand : ExecutionRequestDto, IRequest<ResponseModel<string>>
 {
 }
 
@@ -50,7 +50,7 @@ public class ExecuteWorkFlowCommandHandler : IRequestHandler<ExecuteWorkFlowComm
         };
     }
 
-    private async Task<NormalizedExecutionRequest> MapToNormalizedExecutionRequest(ExecutionRequestCommand request)
+    private async Task<NormalizedExecutionRequest> MapToNormalizedExecutionRequest(ExecutionRequestDto request)
     {
         var response = request switch
         {
@@ -78,7 +78,7 @@ public class ExecuteWorkFlowCommandHandler : IRequestHandler<ExecuteWorkFlowComm
         };
     }
 
-    private static void SubstituteVariables(ExecutionRequestCommand request, List<ScriptResponse>? scripts)
+    private static void SubstituteVariables(ExecutionRequestDto request, List<ScriptResponse>? scripts)
     {
         if (scripts == null) return;
 

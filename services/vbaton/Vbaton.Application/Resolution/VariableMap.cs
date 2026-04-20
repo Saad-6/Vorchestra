@@ -10,8 +10,8 @@ namespace Vbaton.Application.Resolution;
 /// </summary>
 public static class VariableMap
 {
-    private static readonly IReadOnlyDictionary<string, Func<ExecutionRequestCommand, string?>> Resolvers =
-        new Dictionary<string, Func<ExecutionRequestCommand, string?>>
+    private static readonly IReadOnlyDictionary<string, Func<ExecutionRequestDto, string?>> Resolvers =
+        new Dictionary<string, Func<ExecutionRequestDto, string?>>
         {
             // Tenant sources
             [ScriptVariableSource.Tenant.ID]                = r => r.Tenant?.Id.ToString(),
@@ -34,7 +34,7 @@ public static class VariableMap
     /// Keys are the source strings (e.g. "Tenant.Slug"), values are the resolved strings.
     /// Null values are omitted — unresolvable placeholders are left as-is in script content.
     /// </summary>
-    public static Dictionary<string, string> BuildContext(ExecutionRequestCommand request)
+    public static Dictionary<string, string> BuildContext(ExecutionRequestDto request)
     {
         var context = new Dictionary<string, string>(Resolvers.Count);
 

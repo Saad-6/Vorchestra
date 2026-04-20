@@ -1,6 +1,6 @@
 ﻿namespace Shared.DTO;
 
-public class ExecutionRequestCommand
+public class ExecutionRequestDto
 {
     public ServerContextDto Server { get; set; } = new();
 

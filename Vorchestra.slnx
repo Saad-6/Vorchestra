@@ -14,6 +14,12 @@
     <Project Path="services/vorchestra/Vorchestra.Infrastructure/Vorchestra.Infrastructure.csproj" />
     <Project Path="services/vorchestra/Vorchestra/Vorchestra.Domain.csproj" />
   </Folder>
+  <Folder Name="/Services/Workflow/">
+    <Project Path="Workflow.Application/Workflow.Application.csproj" Id="11b24d07-7f7c-4ad6-85eb-d5366b108ba2" />
+    <Project Path="Workflow.Domain/Workflow.Domain.csproj" Id="5375c502-049d-44c0-9469-7e72930eef04" />
+    <Project Path="Workflow.DTO/Workflow.DTO.csproj" Id="4d14fd47-86e6-48e2-bc1c-2854cf14c2a1" />
+    <Project Path="Workflow.Infrastructure/Workflow.Infrastructure.csproj" Id="b332047d-d359-42e9-a159-e43eba15cbd0" />
+  </Folder>
   <Folder Name="/Services/Xcript/">
     <Project Path="services/xcript/Xcript.API/Xcript.API.csproj" Id="b743d73d-06dc-4ab4-8fad-cddb403553bd" />
     <Project Path="services/xcript/Xcript.Application/Xcript.Application.csproj" Id="b7d99247-9d72-4b0c-9250-9f5408fa932b" />

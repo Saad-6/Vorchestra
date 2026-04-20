@@ -5,14 +5,14 @@ using Vbaton.Application.Commands;
 
 namespace Vbaton.Infrastructure.EventHandlers;
 
-public class ExecuteWorkFlowEventHandler : IConsumer<ExecutionRequestCommand>
+public class ExecuteWorkFlowEventHandler : IConsumer<ExecutionRequestDto>
 {
     private readonly IMediator _mediator;
     public ExecuteWorkFlowEventHandler(IMediator mediator)
     {
         _mediator = mediator;
     }
-    public async Task Consume(ConsumeContext<ExecutionRequestCommand> context)
+    public async Task Consume(ConsumeContext<ExecutionRequestDto> context)
     {
         var command = new ExecuteWorkFlowCommand
         {

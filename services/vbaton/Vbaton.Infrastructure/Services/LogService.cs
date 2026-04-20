@@ -15,7 +15,7 @@ public class LogService : ILogService
         _logger = logger;
         _db = db;
     }
-    public async Task LogAsync(ExecutionRequestCommand request, Guid? groupId, string output, bool succeeded, List<ScriptOutputModel> scriptOutputs)
+    public async Task LogAsync(ExecutionRequestDto request, Guid? groupId, string output, bool succeeded, List<ScriptOutputModel> scriptOutputs)
     {
         var executionLog = new ExecutionLog
         {
