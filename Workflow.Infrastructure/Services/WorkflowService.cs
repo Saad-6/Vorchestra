@@ -72,7 +72,6 @@ public class WorkflowService : IWorkflowService
                 Description = workFlow.Description,
                 IsActive = workFlow.IsActive,
                 Trigger = workFlow.Trigger,
-                Order = workFlow.Order,
             };
             await _context.AddAsync(workflow, cancellationToken);
             return workflow.Id;
@@ -87,7 +86,6 @@ public class WorkflowService : IWorkflowService
                 Description = workFlow.Description,
                 IsActive = workFlow.IsActive,
                 Trigger = workFlow.Trigger,
-                Order = workFlow.Order,
             };
             await _context.AddAsync(workflow, cancellationToken);
             return workflow.Id;
@@ -158,7 +156,6 @@ public class WorkflowService : IWorkflowService
             Description = x.Description,
             IsActive = x.IsActive,
             Trigger = x.Trigger,
-            Order = x.Order,
         }).Union(_context.ServerWorkflows.AsNoTracking().Select(x => new WorkflowDto
         {
             Id = x.Id,
@@ -166,7 +163,6 @@ public class WorkflowService : IWorkflowService
             Description = x.Description,
             IsActive = x.IsActive,
             Trigger = x.Trigger,
-            Order = x.Order,
         }));
 
         query = model.ApplyFilters(query);
@@ -194,7 +190,6 @@ public class WorkflowService : IWorkflowService
             Description = x.Description,
             IsActive = x.IsActive,
             Trigger = x.Trigger,
-            Order = x.Order,
         }).FirstOrDefaultAsync(cancellationToken);
 
         if(workflow != null)
@@ -213,7 +208,6 @@ public class WorkflowService : IWorkflowService
             Description = x.Description,
             IsActive = x.IsActive,
             Trigger = x.Trigger,
-            Order = x.Order,
         }).FirstOrDefaultAsync(cancellationToken);
 
         return new ResponseModel<WorkflowDto>
@@ -242,7 +236,6 @@ public class WorkflowService : IWorkflowService
         workflow.IsActive = updateProjectWorkflowDto.IsActive;
         workflow.UpdatedAt = DateTime.UtcNow;
         workflow.Trigger = updateProjectWorkflowDto.Trigger;
-        workflow.Order = updateProjectWorkflowDto.Order;
 
         _context.Update(workflow);
         await _context.SaveChangesAsync(cancellationToken);
@@ -258,7 +251,6 @@ public class WorkflowService : IWorkflowService
                 Description = workflow.Description,
                 IsActive = workflow.IsActive,
                 Trigger = workflow.Trigger,
-                Order = workflow.Order,
             }
         };
     }
@@ -280,7 +272,6 @@ public class WorkflowService : IWorkflowService
         workflow.IsActive = updateServerWorkflowDto.IsActive;
         workflow.UpdatedAt = DateTime.UtcNow;
         workflow.Trigger = updateServerWorkflowDto.Trigger;
-        workflow.Order = updateServerWorkflowDto.Order;
 
         _context.Update(workflow);
         await _context.SaveChangesAsync(cancellationToken);
@@ -296,8 +287,33 @@ public class WorkflowService : IWorkflowService
                 Description = workflow.Description,
                 IsActive = workflow.IsActive,
                 Trigger = workflow.Trigger,
-                Order = workflow.Order,
             }
+        };
+    }
+
+    public async Task<ResponseModel<List<WorkflowContextDto>>> GetWorkFlowsByTriggerAsync(string workFlowTrigger)
+    {
+        var workflows = await _context.ProjectWorkflows.AsNoTracking().Where(x => x.Trigger == workFlowTrigger).Select(x => new WorkflowContextDto
+        {
+            Name = x.Name,
+            Description = x.Description,
+            IsActive = x.IsActive,
+            Trigger = x.Trigger,
+            GroupIds = _context.WorkflowGroups.Where(g => g.WorkflowId == x.Id).Select(g => g.GroupId).ToList(),
+        }).Union(_context.ServerWorkflows.AsNoTracking().Where(x => x.Trigger == workFlowTrigger).Select(x => new WorkflowContextDto
+        {
+            Name = x.Name,
+            Description = x.Description,
+            IsActive = x.IsActive,
+            Trigger = x.Trigger,
+            GroupIds = _context.WorkflowGroups.Where(g => g.WorkflowId == x.Id).Select(g => g.GroupId).ToList(),
+        })).ToListAsync();
+
+        return new ResponseModel<List<WorkflowContextDto>>
+        {
+            Success = true,
+            Message = "Workflows retrieved successfully.",
+            Data = workflows
         };
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.Application.Models;
+using Shared.DTO;
 using Vorchestra.Application.Interfaces;
 using Vorchestra.Domain.DataModels;
 using Vorchestra.DTOs;
@@ -122,6 +123,39 @@ public class ServerService : IServerService
             TotalCount = totalCount,
             PageNumber = filter.Page,
             PageSize = filter.PageSize,
+        };
+    }
+
+    public async Task<ResponseModel<ServerContextDto>> GetServerContextByIdAsync(Guid serverId, CancellationToken cancellationToken = default)
+    {
+        var server = await _context.Servers.FindAsync(serverId, cancellationToken);
+        
+        if (server == null)
+        {
+            return new ResponseModel<ServerContextDto>
+            {
+                Success = false,
+                Message = "Server not found.",
+                Data = null
+            };
+        }
+
+        var serverContext = new ServerContextDto
+        {
+            Id = server.Id,
+            Name = server.Name,
+            IpAddress = server.IPAddress,
+            UserName = server.UserName,
+            Port = server.Port,
+            DefaultDirectory = server.DefaultDirectory,
+            Password = server.Password,
+        };
+
+        return new ResponseModel<ServerContextDto>
+        {
+            Success = true,
+            Message = "Server context retrieved successfully.",
+            Data = serverContext
         };
     }
 

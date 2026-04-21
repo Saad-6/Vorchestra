@@ -4,8 +4,8 @@ namespace Vorchestra.Domain.DataModels;
 
 public class Project : BaseEntity
 {
-    public string Name { get; set; }
-    public string Description { get; set; }
+    public string Name { get; set; } = null!;
+    public string Description { get; set; } = string.Empty;
     public string? Url { get; set; }
     public bool IsRelative { get; set; }
     public string? Branch { get; set; }

@@ -4,5 +4,5 @@ namespace Xcript.Application.Interfaces;
 
 public interface IVariableSourceService
 {
-    Task<ResponseModel<IEnumerable<string>>> GetAvailableSourcesAsync();
+    Task<ResponseModel<IEnumerable<string>>> GetAvailableSourcesAsync(bool fetchTenantVariables = true);
 }

@@ -70,7 +70,45 @@ public class GroupService : IGroupService
             Data = groupId.ToString()
         };
     }
-
+    public async Task<ResponseModel<List<GroupViewDto>>> GetGroupsByIdsAsync(
+    List<Guid> groupIds,
+    CancellationToken cancellationToken = default)
+    {
+        var groups = await _context.Groups
+                .AsNoTracking()
+                .Where(g => groupIds.Contains(g.Id))
+                .Select(g => new GroupViewDto
+                {
+                    Id = g.Id,
+                    Name = g.Name,
+                    Description = g.Description,
+                    Scripts = (
+                        from sg in _context.ScriptGroups
+                        join s in _context.Scripts on sg.ScriptId equals s.Id
+                        where sg.GroupId == g.Id
+                        select new ScriptViewDto
+                        {
+                            Id = s.Id,
+                            Name = s.Name,
+                            Content = s.Content,
+                            Order = sg.Order,
+                            Variables = (
+                                from sv in _context.ScriptVariables
+                                join v in _context.Variables on sv.VariableId equals v.Id
+                                where sv.ScriptId == s.Id
+                                select new ScriptVariableViewDto { Name = v.Name, Source = v.Source }
+                            ).ToList()
+                        }
+                    ).ToList()
+                })
+                .ToListAsync(cancellationToken);
+        return new ResponseModel<List<GroupViewDto>>
+        {
+            Success = true,
+            Message = "Groups retrieved successfully.",
+            Data = groups
+        };
+    }
     public async Task<ResponseModel<GroupViewDto>> GetGroupByIdAsync(
         Guid groupId,
         CancellationToken cancellationToken = default)

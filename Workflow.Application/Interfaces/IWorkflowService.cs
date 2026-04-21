@@ -1,4 +1,5 @@
 ﻿using Shared.Application.Models;
+using Shared.DTO;
 using Workflow.DTO;
 
 namespace Workflow.Application.Interfaces;
@@ -13,5 +14,6 @@ public interface IWorkflowService
     Task<ResponseModel<Guid>> CreateProjectWorkflowAsync(CreateProjectWorkflowDto createProjectWorkflowDto, CancellationToken cancellationToken = default);
     Task<ResponseModel<WorkflowDto>> UpdateServerWorkflowAsync(UpdateServerWorkflowDto updateServerWorkflowDto, CancellationToken cancellationToken = default);
     Task<ResponseModel<WorkflowDto>> UpdateProjectWorkflowAsync(UpdateProjectWorkflowDto updateProjectWorkflowDto, CancellationToken cancellationToken = default);
+    Task<ResponseModel<List<WorkflowContextDto>>> GetWorkFlowsByTriggerAsync(string workFlowTrigger);
     
 }

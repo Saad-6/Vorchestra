@@ -23,10 +23,10 @@ public class SshService : ISshService
         var scriptOutputs = new List<ScriptOutputModel>();
 
         _logger.LogInformation("Connecting to server {IpAddress}:{Port} as {Username}",
-            server.IpAddress, server.Port, server.Username);
+            server.IpAddress, server.Port, server.UserName);
 
-        using var sshClient = new SshClient(server.IpAddress, server.Port, server.Username, server.Password);
-        using var sftpClient = new SftpClient(server.IpAddress, server.Port, server.Username, server.Password);
+        using var sshClient = new SshClient(server.IpAddress, server.Port, server.UserName, server.Password);
+        using var sftpClient = new SftpClient(server.IpAddress, server.Port, server.UserName, server.Password);
 
         try
         {

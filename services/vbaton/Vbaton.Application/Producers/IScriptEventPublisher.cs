@@ -6,6 +6,6 @@ namespace Vbaton.Application.Producers;
 
 public interface IScriptEventPublisher
 {
-    Task<ResponseModel<ScriptsByIdsResponse>> PublishScriptsByIdsEvent(ScriptsByIdsRequest request);
-    Task<ResponseModel<ScriptsByIdsResponse>> PublishScriptsByIdGroupEvent(Guid groupId);
+    Task<ResponseModel<List<ScriptsByIdsResponse>>> PublishScriptsByIdsEvent(ScriptsByIdsRequest request);
+    Task<ResponseModel<List<ScriptsByIdsResponse>>> PublishScriptsByGroupIdsEvent(List<Guid> groupIds);
 }

@@ -40,7 +40,7 @@ public class ExecuteWorkFlowCommandHandler : IRequestHandler<ExecuteWorkFlowComm
         var scriptOutputs = result.Data ?? [];
         var combinedOutput = string.Join("\n", scriptOutputs.Select(s => s.Output));
 
-        await _logService.LogAsync(request, request.GroupId, combinedOutput, result.Success, scriptOutputs);
+        await _logService.LogAsync(request, request.GroupIds, combinedOutput, result.Success, scriptOutputs);
 
         return new ResponseModel<string>
         {
@@ -54,20 +54,20 @@ public class ExecuteWorkFlowCommandHandler : IRequestHandler<ExecuteWorkFlowComm
     {
         var response = request switch
         {
-            _ when request.GroupId != null && request.GroupId != Guid.Empty
-                => await _scriptEventPublisher.PublishScriptsByIdGroupEvent(request.GroupId.Value),
+            _ when request.GroupIds != null && request.GroupIds.Count > 0
+                => await _scriptEventPublisher.PublishScriptsByGroupIdsEvent(request.GroupIds),
 
             _ when request.ScriptIds != null && request.ScriptIds.Count > 0
                 => await _scriptEventPublisher.PublishScriptsByIdsEvent(
                     new ScriptsByIdsRequest { ScriptIds = request.ScriptIds }),
 
-            _ => throw new ArgumentException("Either GroupId or ScriptIds must be provided.")
+            _ => throw new ArgumentException("Either GroupIds or ScriptIds must be provided.")
         };
 
         if (!response.Success)
             throw new InvalidOperationException($"Failed to fetch scripts: {response.Message}");
 
-        var scripts = response?.Data?.Scripts;
+        var scripts = response?.Data?.OrderBy(m=>m.Order).SelectMany(m => m.Scripts).OrderBy(s => s.Order).ToList();
 
         SubstituteVariables(request, scripts);
 

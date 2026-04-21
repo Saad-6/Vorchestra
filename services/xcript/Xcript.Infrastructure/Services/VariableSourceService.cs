@@ -8,18 +8,22 @@ namespace Xcript.Infrastructure.Services;
 public class VariableSourceService : IVariableSourceService
 {
 
-    public Task<ResponseModel<IEnumerable<string>>> GetAvailableSourcesAsync()
+    public Task<ResponseModel<IEnumerable<string>>> GetAvailableSourcesAsync(bool fetchTenantVariables = true)
     {
-        var sources = typeof(ScriptVariableSource.Tenant)
-            .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
-            .Where(f => f.IsLiteral && !f.IsInitOnly)
-            .Select(f => (string)f.GetRawConstantValue())
-            .Concat(
-                typeof(ScriptVariableSource.Server)
+        var sources = typeof(ScriptVariableSource.Server)
+                    .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                    .Where(f => f.IsLiteral && !f.IsInitOnly)
+                    .Select(f => (string)f.GetRawConstantValue());
+
+        if (fetchTenantVariables)
+        {
+            sources.Concat(
+                typeof(ScriptVariableSource.Tenant)
                     .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
                     .Where(f => f.IsLiteral && !f.IsInitOnly)
                     .Select(f => (string)f.GetRawConstantValue())
             );
+        }
         var response = new ResponseModel<IEnumerable<string>>
         {
             Success = true,

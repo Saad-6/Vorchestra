@@ -7,10 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MassTransit" Version="9.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.14" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Shared.Contracts\Shared.Contracts.csproj" />
     <ProjectReference Include="..\Workflow.Application\Workflow.Application.csproj" />
     <ProjectReference Include="..\Workflow.Domain\Workflow.Domain.csproj" />
   </ItemGroup>

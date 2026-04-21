@@ -25,7 +25,7 @@ public static class VariableMap
             [ScriptVariableSource.Server.ID]                = r => r.Server?.Id.ToString(),
             [ScriptVariableSource.Server.IP_ADDRESS]        = r => r.Server?.IpAddress,
             [ScriptVariableSource.Server.PORT]              = r => r.Server?.Port.ToString(),
-            [ScriptVariableSource.Server.USERNAME]          = r => r.Server?.Username,
+            [ScriptVariableSource.Server.USERNAME]          = r => r.Server?.UserName,
             [ScriptVariableSource.Server.PASSWORD]          = r => r.Server?.Password,
         };
 

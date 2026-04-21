@@ -39,9 +39,9 @@ public class VariableController : ControllerBase
     }
 
     [HttpGet("sources")]
-    public async Task<IActionResult> GetSourcesAsync(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetSourcesAsync([FromQuery] bool fetchTenantVariables = true, CancellationToken cancellationToken = default)
     {
-        var result = await _mediator.Send(new AllVariableSourcesQuery(), cancellationToken);
+        var result = await _mediator.Send(new AllVariableSourcesQuery { FetchTenantVariables = fetchTenantVariables }, cancellationToken);
 
         if (result.Success)
             return Ok(result);

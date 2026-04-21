@@ -4,13 +4,13 @@ namespace Vorchestra.Domain.DataModels;
 
 public class Server : BaseEntity
 {
-    public string Name { get; set; }
-    public string IPAddress { get; set; }
-    public string UserName { get; set; }
-    public string Password { get; set; }
+    public string Name { get; set; } = null!;
+    public string IPAddress { get; set; } = null!;
+    public string UserName { get; set; } = null!;
+    public string Password { get; set; } = null!;
     public int Port { get; set; }
-    public string Status { get; set; }
-    public string DefaultDirectory { get; set; }
+    public string Status { get; set; } = null!;
+    public string DefaultDirectory { get; set; } = null!;
     public int TotalRamGb { get; set; }
     public int TotalStorageGb { get; set; }
     public int UsedRamGb { get; set; }

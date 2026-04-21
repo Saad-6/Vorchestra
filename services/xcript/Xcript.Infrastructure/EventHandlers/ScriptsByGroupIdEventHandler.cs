@@ -18,16 +18,16 @@ public class ScriptsByGroupIdEventHandler : IConsumer<ScriptsByGroupIdRequest>
     {
         var request = context.Message;
 
-        var queryResponse = await _mediator.Send(new GroupByIdQuery { Id = request.GroupId ?? Guid.Empty});
+        var queryResponse = await _mediator.Send(new GroupsByIdsQuery { GroupIds = request.GroupIds ?? new List<Guid>() });
 
-        var response = new ResponseModel<ScriptsByIdsResponse>
-        {
+        var response = new ResponseModel<List<ScriptsByIdsResponse>>
+        {   
             Success = queryResponse.Success,
             Message = queryResponse.Message,
-            Data = new ScriptsByIdsResponse
+            Data = queryResponse.Data?.Select(m => new ScriptsByIdsResponse
             {
-                GroupName = queryResponse.Data?.Name ?? string.Empty,
-                Scripts = queryResponse.Data?.Scripts.Select(s => new ScriptResponse
+                GroupName = m.Name ?? string.Empty,
+                Scripts = m.Scripts?.Select(s => new ScriptResponse
                 {
                     Id = s.Id,
                     Name = s.Name,
@@ -40,7 +40,7 @@ public class ScriptsByGroupIdEventHandler : IConsumer<ScriptsByGroupIdRequest>
                         Source = v.Source
                     }).ToList()
                 }).ToList() ?? new List<ScriptResponse>()
-            }
+            }).ToList() ?? new List<ScriptsByIdsResponse>()
         };
 
         await context.RespondAsync(response);

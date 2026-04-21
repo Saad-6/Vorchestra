@@ -18,7 +18,7 @@ public class ExecuteWorkFlowEventHandler : IConsumer<ExecutionRequestDto>
         {
             Server = context.Message.Server,
             Tenant = context.Message.Tenant,
-            GroupId = context.Message.GroupId,
+            GroupIds = context.Message.GroupIds,
             ScriptIds = context.Message.ScriptIds,
         };
 

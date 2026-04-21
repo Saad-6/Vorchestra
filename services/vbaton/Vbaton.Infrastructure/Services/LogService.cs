@@ -15,12 +15,12 @@ public class LogService : ILogService
         _logger = logger;
         _db = db;
     }
-    public async Task LogAsync(ExecutionRequestDto request, Guid? groupId, string output, bool succeeded, List<ScriptOutputModel> scriptOutputs)
+    public async Task LogAsync(ExecutionRequestDto request, List<Guid>? groupIds, string output, bool succeeded, List<ScriptOutputModel> scriptOutputs)
     {
         var executionLog = new ExecutionLog
         {
             Id = Guid.NewGuid(),
-            GroupId = groupId,
+            GroupId = groupIds?.FirstOrDefault(),
             ServerId = request.Server?.Id,
             TenantId = request.Tenant?.Id,
             Output = output,
@@ -37,7 +37,7 @@ public class LogService : ILogService
             Message = string.Empty
         }).ToList();
 
-        _logger.LogInformation("Logging execution result for GroupId: {GroupId}, ServerId: {ServerId}, TenantId: {TenantId}, Succeeded: {Succeeded}", groupId, request.Server?.Id, request.Tenant?.Id, succeeded);
+        _logger.LogInformation("Logging execution result for GroupIds: {GroupIds}, ServerId: {ServerId}, TenantId: {TenantId}, Succeeded: {Succeeded}", groupIds, request.Server?.Id, request.Tenant?.Id, succeeded);
         _logger.LogDebug("Execution output: {Output}", output);
 
         await _db.AddAsync(executionLog);

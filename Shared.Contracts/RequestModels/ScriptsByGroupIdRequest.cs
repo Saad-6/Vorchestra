@@ -2,5 +2,5 @@
 
 public class ScriptsByGroupIdRequest
 {
-    public Guid? GroupId { get; set; }
+    public List<Guid>? GroupIds { get; set; }
 }

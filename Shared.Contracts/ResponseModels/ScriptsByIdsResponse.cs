@@ -3,6 +3,7 @@
 public class ScriptsByIdsResponse
 {
     public string GroupName { get; set; } = string.Empty;
+    public int Order { get; set; }
     public List<ScriptResponse> Scripts { get; set; } = new List<ScriptResponse>();
 }
 

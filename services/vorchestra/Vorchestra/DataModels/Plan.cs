@@ -5,8 +5,8 @@ namespace Vorchestra.Domain.DataModels;
 public class Plan : BaseEntity
 {
     public Guid ProjectId { get; set; }
-    public string Name { get; set; }
-    public string Slug { get; set; }
+    public string Name { get; set; } = null!;
+    public string Slug { get; set; } = null!;
     public decimal MonthlyPrice { get; set; }
     public decimal AnnualPrice { get; set; }
     public int MaxRam { get; set; }

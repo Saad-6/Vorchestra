@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared.Contracts\Shared.Contracts.csproj" />
     <ProjectReference Include="..\..\..\shared\Shared.Application\Shared.Application.csproj" />
     <ProjectReference Include="..\Vorchestra.DTOs\Vorchestra.DTOs.csproj" />
     <ProjectReference Include="..\Vorchestra\Vorchestra.Domain.csproj" />

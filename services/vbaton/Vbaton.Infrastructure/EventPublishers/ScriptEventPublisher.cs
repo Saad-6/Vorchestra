@@ -16,16 +16,16 @@ public class ScriptEventPublisher : IScriptEventPublisher
         _scriptsByIdsClient = scriptsByIdsClient;
         _scriptsByGroupIdClient = scriptsByGroupIdClient;
     }
-    public async Task<ResponseModel<ScriptsByIdsResponse>> PublishScriptsByIdGroupEvent(Guid groupId)
+    public async Task<ResponseModel<List<ScriptsByIdsResponse>>> PublishScriptsByGroupIdsEvent(List<Guid> groupIds)
     {
-        var request = new ScriptsByGroupIdRequest { GroupId = groupId };
-        var response = await _scriptsByGroupIdClient.GetResponse<ResponseModel<ScriptsByIdsResponse>>(request);
+        var request = new ScriptsByGroupIdRequest { GroupIds = groupIds };
+        var response = await _scriptsByGroupIdClient.GetResponse<ResponseModel<List<ScriptsByIdsResponse>>>(request);
         return response.Message;
     }
 
-    public async Task<ResponseModel<ScriptsByIdsResponse>> PublishScriptsByIdsEvent(ScriptsByIdsRequest request)
+    public async Task<ResponseModel<List<ScriptsByIdsResponse>>> PublishScriptsByIdsEvent(ScriptsByIdsRequest request)
     {
-        var response = await _scriptsByIdsClient.GetResponse<ResponseModel<ScriptsByIdsResponse>>(request);
+        var response = await _scriptsByIdsClient.GetResponse<ResponseModel<List<ScriptsByIdsResponse>>>(request);
         return response.Message;
     }
 }

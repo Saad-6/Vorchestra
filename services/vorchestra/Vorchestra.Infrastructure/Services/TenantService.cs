@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.Application.Models;
+using Shared.DTO;
 using Vorchestra.Application.Interfaces;
 using Vorchestra.Domain.Constants;
 using Vorchestra.Domain.DataModels;
@@ -17,30 +18,29 @@ public class TenantService : ITenantService
     }
     public async Task<ResponseModel<string>> ApplyFreeTrialAsync(Guid tenantId, DateTimeOffset trialEndDate, CancellationToken cancellationToken = default)
     {
-        var existingTenant = await _context.Tenants.FirstOrDefaultAsync(
-            t => t.Id == tenantId, cancellationToken);
+        //var existingTenant = await _context.Tenants.FirstOrDefaultAsync(
+        //    t => t.Id == tenantId, cancellationToken);
 
-        if (existingTenant == null)
-        {
-            return new ResponseModel<string>
-            {
-                Success = false,
-                Message = $"The tenant with Id {tenantId} does not exist."
-            };
-        }
+        //if (existingTenant == null)
+        //{
+        //    return new ResponseModel<string>
+        //    {
+        //        Success = false,
+        //        Message = $"The tenant with Id {tenantId} does not exist."
+        //    };
+        //}
 
-        if(existingTenant.Status == TenantStatus.SUBSCRIBED || existingTenant.Status == TenantStatus.FREE_TRIAL)
-        {
-            return new ResponseModel<string>
-            {
-                Success = false,
-                Message = $"The tenant with Id {tenantId} is already subscribed and cannot be put on a free trial."
-            };
-        }
+        //if(existingTenant.Status == TenantStatus.SUBSCRIBED || existingTenant.Status == TenantStatus.FREE_TRIAL)
+        //{
+        //    return new ResponseModel<string>
+        //    {
+        //        Success = false,
+        //        Message = $"The tenant with Id {tenantId} is already subscribed and cannot be put on a free trial."
+        //    };
+        //}
 
-        existingTenant.Status = TenantStatus.FREE_TRIAL;
-        existingTenant.TrialEndsAt = trialEndDate;
-        await _context.SaveChangesAsync(cancellationToken);
+        //existingTenant.Status = TenantStatus.FREE_TRIAL;
+        //await _context.SaveChangesAsync(cancellationToken);
 
         return new ResponseModel<string>
         {
@@ -82,14 +82,13 @@ public class TenantService : ITenantService
 
         if (existingTenant.Status == TenantStatus.FREE_TRIAL)
         {
-            existingTenant.SubscriptionStartDate = existingTenant?.TrialEndsAt.Value ?? DateTimeOffset.UtcNow;
+            existingTenant.SubscriptionStartDate =  DateTimeOffset.UtcNow;
 
             existingTenant.SubscriptionEndDate = apply.BillingCycle == BillingCycle.MONTHLY ? existingTenant?.SubscriptionStartDate?.AddMonths(1) : existingTenant?.SubscriptionStartDate?.AddYears(1);
 
             subscriptionPlanHistory = new PlanSubscriptionHistory
             {
                 TenantId = existingTenant.Id,
-                EndDate = existingTenant.TrialEndsAt,
                 IsFreeTrial = true
             };
         }
@@ -247,7 +246,6 @@ public class TenantService : ITenantService
             Status = t.Status,
             SuspendedAt = t.SuspendedAt,
             SuspensionReason = t.SuspensionReason,
-            TrialEndsAt = t.TrialEndsAt,
             SubscriptionStartDate = t.SubscriptionStartDate,
             SubscriptionEndDate = t.SubscriptionEndDate,
             BillingCycle = t.BillingCycle,
@@ -269,6 +267,40 @@ public class TenantService : ITenantService
         };
     }
 
+    public async Task<ResponseModel<TenantContextDto>> GetTenantContextByIdAsync(Guid tenantId, CancellationToken cancellationToken = default)
+    {
+        
+        var tenant = await _context.Tenants.FirstOrDefaultAsync(t => t.Id == tenantId, cancellationToken);
+        if (tenant == null)
+        {
+            return new ResponseModel<TenantContextDto> { Success = false };
+        }
+        return new ResponseModel<TenantContextDto>
+        {
+            Success = true,
+            Data = new TenantContextDto
+            {
+                Id = tenantId,
+                Name = tenant.Name,
+                Slug = tenant.Slug,
+                Domain = tenant.Domain,
+                ConnectionString = BuildConnectionString(tenant),
+                Port = GetAvailablePort()
+            }
+        };
+
+    }
+
+    private string BuildConnectionString(Tenant tenant)
+    {
+        return $"Server={tenant.Domain};Database={tenant.Identifier};User Id=your_user;Password=your_password;";
+    }
+    private int GetAvailablePort()
+    {
+        // Implement logic to get an available port number
+        // This is a placeholder implementation and should be replaced with actual logic
+        return new Random().Next(10000, 60000);
+    }
     public async Task<ResponseModel<string>> ReactivateTenantAsync(Guid tenantId, CancellationToken cancellationToken = default)
     {
         var existingTenant = await _context.Tenants.FirstOrDefaultAsync(
@@ -292,7 +324,7 @@ public class TenantService : ITenantService
         return new ResponseModel<string>
         {
             Success = true,
-            Message = "Tenant reactivated successfully."
+            Message = "Tenant reactivated successfully, please proceed with a new subscription."
         };
     }
 

@@ -5,6 +5,7 @@ using Xcript.Application.Interfaces;
 namespace Xcript.Application.Queries.VariableSource;
 public class AllVariableSourcesQuery : IRequest<ResponseModel<IEnumerable<string>>>
 {
+    public bool FetchTenantVariables { get; set; } = true;
 }
 public class AllVariableSourcesQueryHandler : IRequestHandler<AllVariableSourcesQuery, ResponseModel<IEnumerable<string>>>
 {
@@ -15,6 +16,6 @@ public class AllVariableSourcesQueryHandler : IRequestHandler<AllVariableSources
     }
     public async Task<ResponseModel<IEnumerable<string>>> Handle(AllVariableSourcesQuery request, CancellationToken cancellationToken)
     {
-        return await _variableSourceService.GetAvailableSourcesAsync();
+        return await _variableSourceService.GetAvailableSourcesAsync(request.FetchTenantVariables);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Shared.Application.Models;
+using Shared.DTO;
 using Vorchestra.DTOs;
 
 namespace Vorchestra.Application.Interfaces;
@@ -13,4 +14,5 @@ public interface ITenantService
     Task<ResponseModel<string>> CancelSubscriptionAsync(Guid tenantId, CancellationToken cancellationToken = default);
     Task<ResponseModel<string>> SuspendTenantAsync(Guid tenantId, string reason, CancellationToken cancellationToken = default);
     Task<ResponseModel<string>> ReactivateTenantAsync(Guid tenantId, CancellationToken cancellationToken = default);
+    Task<ResponseModel<TenantContextDto>> GetTenantContextByIdAsync(Guid tenantId, CancellationToken cancellationToken = default);
 }

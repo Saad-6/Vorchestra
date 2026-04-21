@@ -80,4 +80,14 @@ public class TenantController : ControllerBase
 
         return BadRequest(result);
     }
+
+    [HttpPost("reactivate")]
+    public async Task<ActionResult> Reactivate([FromBody] ReActivateTenantCommand command,CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(command, cancellationToken);
+        if(result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
 }

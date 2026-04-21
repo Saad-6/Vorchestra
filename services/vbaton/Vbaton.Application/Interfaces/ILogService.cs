@@ -5,5 +5,5 @@ namespace Vbaton.Application.Interfaces;
 
 public interface ILogService
 {
-    Task LogAsync(ExecutionRequestDto request, Guid? groupId, string output, bool succeeded, List<ScriptOutputModel> scriptOutputs);
+    Task LogAsync(ExecutionRequestDto request, List<Guid> groupIds, string output, bool succeeded, List<ScriptOutputModel> scriptOutputs);
 }
