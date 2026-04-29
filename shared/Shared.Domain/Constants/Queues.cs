@@ -14,4 +14,11 @@ public class Queues
     {
         public const string ExecuteWorkFlow = "execute-workflow-queue";
     }
+
+    public class Workflow
+    {
+        public const string ProjectWorkflowsByTrigger = "project-workflows-by-trigger";
+        public const string ServerWorkflowsByTrigger = "server-workflows-by-trigger";
+        public const string ServerWorkflowById = "server-workflow-by-id";
+    }
 }

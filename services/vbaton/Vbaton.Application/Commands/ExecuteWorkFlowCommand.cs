@@ -17,7 +17,6 @@ public class ExecuteWorkFlowCommand : ExecutionRequestDto, IRequest<ResponseMode
 
 public class ExecuteWorkFlowCommandHandler : IRequestHandler<ExecuteWorkFlowCommand, ResponseModel<string>>
 {
-    // Matches {{Tenant.Slug}}, {{Server.IpAddress}}, etc. — compiled once, shared across all requests.
     private static readonly Regex PlaceholderPattern = new(@"\{\{([^}]+)\}\}", RegexOptions.Compiled);
 
     private readonly ISshService _sshService;

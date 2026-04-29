@@ -9,22 +9,22 @@ namespace Vorchestra.Infrastructure.EventPublishers;
 
 public class TenantEventPublisher : ITenantEventPublisher
 {
-    private readonly IRequestClient<WorkflowsByTriggerRequest> _requestClient;
+    private readonly IRequestClient<ProjectWorkflowsByTriggerRequest> _requestClient;
     private readonly IRequestClient<ExecutionRequestDto> _executionClient;
 
-    public TenantEventPublisher(IRequestClient<WorkflowsByTriggerRequest> requestClient, IRequestClient<ExecutionRequestDto> executionClient)
+    public TenantEventPublisher(IRequestClient<ProjectWorkflowsByTriggerRequest> requestClient, IRequestClient<ExecutionRequestDto> executionClient)
     {
         _requestClient = requestClient;
         _executionClient = executionClient;
     }
-    public async Task<ResponseModel<WorkflowsByTriggerResponse>> GetWorkflowsAsync(string trigger)
+    public async Task<ResponseModel<WorkflowsByTriggerResponse>> GetProjectWorkflowsAsync(string trigger, Guid projectId)
     {
-        var response = await _requestClient.GetResponse<ResponseModel<WorkflowsByTriggerResponse>>(new WorkflowsByTriggerRequest { Trigger = trigger });
+        var response = await _requestClient.GetResponse<ResponseModel<WorkflowsByTriggerResponse>>(new ProjectWorkflowsByTriggerRequest { Trigger = trigger, ProjectId = projectId });
 
         return response.Message;
     }
 
-    public async Task<ResponseModel<string>> PublishEventAsync(ServerContextDto server, List<Guid> groupIds, TenantContextDto? tenant = null)
+    public async Task<ResponseModel<string>> PublishEventAsync(ServerContextDto server, List<Guid> groupIds, TenantContextDto tenant)
     {
         var request = new ExecutionRequestDto
         {

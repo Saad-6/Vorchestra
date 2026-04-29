@@ -7,13 +7,30 @@ namespace Workflow.Application.Interfaces;
 public interface IWorkflowService
 {
     Task<ResponseModel<WorkflowDto>> GetWorkflowByIdAsync(Guid workflowId, CancellationToken cancellationToken = default);
+
+    Task<ResponseModel<WorkflowContextDto>> GetWorkflowContextByIdAsync(Guid workflowId, CancellationToken cancellationToken = default);
+    
     Task<PaginatedResponseModel<WorkflowDto>> GetPaginatedWorkflowsAsync(FilterModel model, CancellationToken cancellationToken = default);
+
+    Task<PaginatedResponseModel<WorkflowDto>> GetPaginatedProjectWorkflowsAsync(FilterModel model, CancellationToken cancellationToken = default);
+
+    Task<PaginatedResponseModel<WorkflowDto>> GetPaginatedServerWorkflowsAsync(FilterModel model, CancellationToken cancellationToken = default);
+    
     Task<ResponseModel<string>> DeleteProjectWorkflowAsync(Guid workflowId, CancellationToken cancellationToken = default);
+    
     Task<ResponseModel<string>> DeleteServerWorkflowAsync(Guid workflowId, CancellationToken cancellationToken = default);
+    
     Task<ResponseModel<Guid>> CreateServerWorkflowAsync(CreateServerWorkflowDto createServerWorkflowDto, CancellationToken cancellationToken = default);
+    
     Task<ResponseModel<Guid>> CreateProjectWorkflowAsync(CreateProjectWorkflowDto createProjectWorkflowDto, CancellationToken cancellationToken = default);
+    
     Task<ResponseModel<WorkflowDto>> UpdateServerWorkflowAsync(UpdateServerWorkflowDto updateServerWorkflowDto, CancellationToken cancellationToken = default);
+    
     Task<ResponseModel<WorkflowDto>> UpdateProjectWorkflowAsync(UpdateProjectWorkflowDto updateProjectWorkflowDto, CancellationToken cancellationToken = default);
+    
     Task<ResponseModel<List<WorkflowContextDto>>> GetWorkFlowsByTriggerAsync(string workFlowTrigger);
     
+    Task<ResponseModel<List<WorkflowContextDto>>> GetProjectWorkFlowsByTriggerAsync(string workFlowTrigger, Guid projectId);
+
+    Task<ResponseModel<List<WorkflowContextDto>>> GetServerWorkFlowsByTriggerAsync(string workFlowTrigger, Guid serverId);
 }

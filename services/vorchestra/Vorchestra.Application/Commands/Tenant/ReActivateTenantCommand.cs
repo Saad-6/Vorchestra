@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Shared.Application.Models;
 using Vorchestra.Application.Interfaces;
 
@@ -6,17 +6,20 @@ namespace Vorchestra.Application.Commands.Tenant;
 
 public class ReActivateTenantCommand : IRequest<ResponseModel<string>>
 {
-    public Guid TenantId { get; set; }
+    public Guid TenantProjectId { get; set; }
 }
+
 public class ReActivateTenantCommandHandler : IRequestHandler<ReActivateTenantCommand, ResponseModel<string>>
 {
-    private readonly ITenantService _tenantService;
-    public ReActivateTenantCommandHandler(ITenantService tenantService)
+    private readonly ITenantProjectService _tenantProjectService;
+
+    public ReActivateTenantCommandHandler(ITenantProjectService tenantProjectService)
     {
-        _tenantService = tenantService;
+        _tenantProjectService = tenantProjectService;
     }
+
     public async Task<ResponseModel<string>> Handle(ReActivateTenantCommand request, CancellationToken cancellationToken)
     {
-        return await _tenantService.ReactivateTenantAsync(request.TenantId, cancellationToken);
+        return await _tenantProjectService.ReactivateTenantProjectAsync(request.TenantProjectId, cancellationToken);
     }
 }

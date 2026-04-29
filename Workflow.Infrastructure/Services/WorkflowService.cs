@@ -181,6 +181,56 @@ public class WorkflowService : IWorkflowService
 
     }
 
+    public async Task<PaginatedResponseModel<WorkflowDto>> GetPaginatedProjectWorkflowsAsync(FilterModel model, CancellationToken cancellationToken = default)
+    {
+        var query = _context.ProjectWorkflows.AsNoTracking().Select(x => new WorkflowDto
+        {
+            Id = x.Id,
+            Name = x.Name,
+            Description = x.Description,
+            IsActive = x.IsActive,
+            Trigger = x.Trigger,
+            ProjectId = x.ProjectId
+        });
+
+        query = model.ApplyFilters(query);
+        var count = await query.CountAsync(cancellationToken);
+        var items = await query.ToListAsync(cancellationToken);
+
+        return new PaginatedResponseModel<WorkflowDto>
+        {
+            Success = true,
+            Message = "Project workflows retrieved successfully.",
+            Data = items,
+            TotalCount = count
+        };
+    }
+
+    public async Task<PaginatedResponseModel<WorkflowDto>> GetPaginatedServerWorkflowsAsync(FilterModel model, CancellationToken cancellationToken = default)
+    {
+        var query = _context.ServerWorkflows.AsNoTracking().Select(x => new WorkflowDto
+        {
+            Id = x.Id,
+            Name = x.Name,
+            Description = x.Description,
+            IsActive = x.IsActive,
+            Trigger = x.Trigger,
+            ServerId = x.ServerId
+        });
+
+        query = model.ApplyFilters(query);
+        var count = await query.CountAsync(cancellationToken);
+        var items = await query.ToListAsync(cancellationToken);
+
+        return new PaginatedResponseModel<WorkflowDto>
+        {
+            Success = true,
+            Message = "Server workflows retrieved successfully.",
+            Data = items,
+            TotalCount = count
+        };
+    }
+
     public async Task<ResponseModel<WorkflowDto>> GetWorkflowByIdAsync(Guid workflowId, CancellationToken cancellationToken = default)
     {
         var workflow = await _context.ProjectWorkflows.AsNoTracking().Where(x => x.Id == workflowId).Select(x => new WorkflowDto
@@ -217,6 +267,45 @@ public class WorkflowService : IWorkflowService
             Data = workflow
         };
 
+    }
+
+    public async Task<ResponseModel<WorkflowContextDto>> GetWorkflowContextByIdAsync(Guid workflowId, CancellationToken cancellationToken = default)
+    {
+        var workflow = await _context.ProjectWorkflows
+            .AsNoTracking()
+            .Where(x => x.Id == workflowId)
+            .Select(x => new WorkflowContextDto
+            {
+                Name = x.Name,
+                Description = x.Description,
+                IsActive = x.IsActive,
+                Trigger = x.Trigger,
+                GroupIds = _context.WorkflowGroups.Where(g => g.WorkflowId == x.Id).Select(g => g.GroupId).ToList()
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (workflow == null)
+        {
+            workflow = await _context.ServerWorkflows
+                .AsNoTracking()
+                .Where(x => x.Id == workflowId)
+                .Select(x => new WorkflowContextDto
+                {
+                    Name = x.Name,
+                    Description = x.Description,
+                    IsActive = x.IsActive,
+                    Trigger = x.Trigger,
+                    GroupIds = _context.WorkflowGroups.Where(g => g.WorkflowId == x.Id).Select(g => g.GroupId).ToList()
+                })
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+
+        return new ResponseModel<WorkflowContextDto>
+        {
+            Success = workflow != null,
+            Message = workflow != null ? "Workflow retrieved successfully." : "Workflow not found.",
+            Data = workflow
+        };
     }
 
     public async Task<ResponseModel<WorkflowDto>> UpdateProjectWorkflowAsync(UpdateProjectWorkflowDto updateProjectWorkflowDto, CancellationToken cancellationToken = default)
@@ -308,6 +397,42 @@ public class WorkflowService : IWorkflowService
             Trigger = x.Trigger,
             GroupIds = _context.WorkflowGroups.Where(g => g.WorkflowId == x.Id).Select(g => g.GroupId).ToList(),
         })).ToListAsync();
+
+        return new ResponseModel<List<WorkflowContextDto>>
+        {
+            Success = true,
+            Message = "Workflows retrieved successfully.",
+            Data = workflows
+        };
+    }
+    public async Task<ResponseModel<List<WorkflowContextDto>>> GetServerWorkFlowsByTriggerAsync(string workFlowTrigger, Guid serverId)
+    {
+        var workflows = await (_context.ServerWorkflows.AsNoTracking().Where(x => x.Trigger == workFlowTrigger && x.ServerId == serverId).Select(x => new WorkflowContextDto
+        {
+            Name = x.Name,
+            Description = x.Description,
+            IsActive = x.IsActive,
+            Trigger = x.Trigger,
+            GroupIds = _context.WorkflowGroups.Where(g => g.WorkflowId == x.Id).Select(g => g.GroupId).ToList(),
+        })).ToListAsync();
+
+        return new ResponseModel<List<WorkflowContextDto>>
+        {
+            Success = true,
+            Message = "Workflows retrieved successfully.",
+            Data = workflows
+        };
+    }
+    public async Task<ResponseModel<List<WorkflowContextDto>>> GetProjectWorkFlowsByTriggerAsync(string workFlowTrigger, Guid projectId)
+    {
+        var workflows = await _context.ProjectWorkflows.AsNoTracking().Where(x => x.Trigger == workFlowTrigger && x.ProjectId == projectId).Select(x => new WorkflowContextDto
+        {
+            Name = x.Name,
+            Description = x.Description,
+            IsActive = x.IsActive,
+            Trigger = x.Trigger,
+            GroupIds = _context.WorkflowGroups.Where(g => g.WorkflowId == x.Id).Select(g => g.GroupId).ToList(),
+        }).ToListAsync();
 
         return new ResponseModel<List<WorkflowContextDto>>
         {

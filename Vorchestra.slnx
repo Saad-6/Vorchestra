@@ -15,6 +15,7 @@
     <Project Path="services/vorchestra/Vorchestra/Vorchestra.Domain.csproj" />
   </Folder>
   <Folder Name="/Services/Workflow/">
+    <Project Path="Workflow.API/Workflow.API.csproj" Id="f1a2b3c4-d5e6-7890-abcd-ef1234567890" />
     <Project Path="Workflow.Application/Workflow.Application.csproj" Id="11b24d07-7f7c-4ad6-85eb-d5366b108ba2" />
     <Project Path="Workflow.Domain/Workflow.Domain.csproj" Id="5375c502-049d-44c0-9469-7e72930eef04" />
     <Project Path="Workflow.DTO/Workflow.DTO.csproj" Id="4d14fd47-86e6-48e2-bc1c-2854cf14c2a1" />

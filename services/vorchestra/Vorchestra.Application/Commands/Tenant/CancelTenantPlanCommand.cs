@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Shared.Application.Models;
 using Shared.Domain.Constants;
 using Vorchestra.Application.Helpers;
@@ -9,51 +9,63 @@ namespace Vorchestra.Application.Commands.Tenant;
 
 public class CancelTenantPlanCommand : IRequest<ResponseModel<string>>
 {
-    public Guid TenantId { get; set; }
+    public Guid TenantProjectId { get; set; }
 }
 
 public class CancelTenantPlanCommandHandler : IRequestHandler<CancelTenantPlanCommand, ResponseModel<string>>
 {
-    private readonly ITenantService _tenantService;
+    private readonly ITenantSubscriptionService _subscriptionService;
+    private readonly ITenantProjectService _tenantProjectService;
     private readonly IServerService _serverService;
     private readonly ITenantEventPublisher _tenantEventPublisher;
-    public CancelTenantPlanCommandHandler(ITenantService tenantService, IServerService serverService, ITenantEventPublisher tenantEventPublisher)
+
+    public CancelTenantPlanCommandHandler(
+        ITenantSubscriptionService subscriptionService,
+        ITenantProjectService tenantProjectService,
+        IServerService serverService,
+        ITenantEventPublisher tenantEventPublisher)
     {
-        _tenantService = tenantService;
+        _subscriptionService = subscriptionService;
+        _tenantProjectService = tenantProjectService;
         _serverService = serverService;
         _tenantEventPublisher = tenantEventPublisher;
     }
+
     public async Task<ResponseModel<string>> Handle(CancelTenantPlanCommand request, CancellationToken cancellationToken)
     {
-        var response = await _tenantService.CancelSubscriptionAsync(request.TenantId, cancellationToken);
-        
-        if(!response.Success)
+        var tenantProjectResponse = await _tenantProjectService.GetTenantProjectByIdAsync(request.TenantProjectId, cancellationToken);
+
+        if (!tenantProjectResponse.Success)
+            return Utility.MapResponse(tenantProjectResponse);
+
+        var response = await _subscriptionService.CancelSubscriptionAsync(request.TenantProjectId, cancellationToken);
+
+        if (!response.Success)
             return response;
 
-        var workflowsResponse = await _tenantEventPublisher.GetWorkflowsAsync(WorkflowTrigger.Project.TENANT_SUSPENDED);
+        var workflowsResponse = await _tenantEventPublisher.GetProjectWorkflowsAsync(WorkflowTrigger.Project.TENANT_SUSPENDED, tenantProjectResponse.Data!.ProjectId);
 
-        if(!workflowsResponse.Success)
+        if (!workflowsResponse.Success)
             return Utility.MapResponse(workflowsResponse);
 
-        var tenantResponse = await _tenantService.GetTenantContextByIdAsync(request.TenantId, cancellationToken);
+        var tenantContextResponse = await _tenantProjectService.GetTenantContextAsync(request.TenantProjectId, cancellationToken);
 
-        if(!tenantResponse.Success)
-            return Utility.MapResponse(tenantResponse);
+        if (!tenantContextResponse.Success)
+            return Utility.MapResponse(tenantContextResponse);
 
-        var serverResponse = await _serverService.GetServerContextByIdAsync(request.TenantId, cancellationToken);  
+        var serverId = tenantProjectResponse.Data!.ServerId;
 
-        if(!serverResponse.Success)
+        if (!serverId.HasValue)
+            return new ResponseModel<string> { Success = false, Message = "No server assigned to this tenant project." };
+
+        var serverResponse = await _serverService.GetServerContextByIdAsync(serverId.Value, cancellationToken);
+
+        if (!serverResponse.Success)
             return Utility.MapResponse(serverResponse);
 
-        var workflows = workflowsResponse?.Data?.Workflows;
+        var groupIds = workflowsResponse.Data?.Workflows?.OrderBy(w => w.Order).SelectMany(w => w.GroupIds).ToList();
 
-        var groupIds = workflows?.OrderBy(w => w.Order).SelectMany(w => w.GroupIds).ToList();
-
-        var tenantContext = tenantResponse.Data;
-
-        var serverContext = serverResponse.Data;
-
-        var publishResponse = await _tenantEventPublisher.PublishEventAsync(serverContext!, groupIds!, tenantContext);
+        var publishResponse = await _tenantEventPublisher.PublishEventAsync(serverResponse.Data!, groupIds!, tenantContextResponse.Data!);
 
         return publishResponse;
     }

@@ -6,6 +6,6 @@ namespace Vorchestra.Application.Producers;
 
 public interface ITenantEventPublisher
 {
-    Task<ResponseModel<WorkflowsByTriggerResponse>> GetWorkflowsAsync(string trigger);
-    Task<ResponseModel<string>> PublishEventAsync(ServerContextDto server, List<Guid> groupIds, TenantContextDto? tenant = null);
+    Task<ResponseModel<WorkflowsByTriggerResponse>> GetProjectWorkflowsAsync(string trigger, Guid projectId);
+    Task<ResponseModel<string>> PublishEventAsync(ServerContextDto server, List<Guid> groupIds, TenantContextDto tenant);
 }

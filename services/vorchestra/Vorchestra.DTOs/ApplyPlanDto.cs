@@ -1,10 +1,8 @@
-﻿namespace Vorchestra.DTOs;
+namespace Vorchestra.DTOs;
 
 public class ApplyPlanDto
 {
+    public Guid TenantProjectId { get; set; }
     public Guid PlanId { get; set; }
-    public Guid TenantId { get; set; }
-    public Guid? ServerId { get; set; }
     public string BillingCycle { get; set; }
-
 }

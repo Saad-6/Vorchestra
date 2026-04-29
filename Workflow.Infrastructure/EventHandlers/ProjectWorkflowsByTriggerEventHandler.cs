@@ -3,19 +3,24 @@ using MediatR;
 using Shared.Application.Models;
 using Shared.Contracts.RequestModels;
 using Shared.Contracts.ResponseModels;
-using Shared.DTO;
 using Workflow.Application.Queries;
 
 namespace Workflow.Infrastructure.EventHandlers;
 
-public class WorkflowsByTriggerEventHandler : IConsumer<WorkflowsByTriggerRequest>
+public class ProjectWorkflowsByTriggerEventHandler : MassTransit.IConsumer<ProjectWorkflowsByTriggerRequest>
 {
     private readonly IMediator _mediator;
-    public async Task Consume(ConsumeContext<WorkflowsByTriggerRequest> context)
+
+    public ProjectWorkflowsByTriggerEventHandler(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
+    public async Task Consume(ConsumeContext<ProjectWorkflowsByTriggerRequest> context)
     {
         var message = context.Message;
         
-        var queryResponse = await _mediator.Send(new WorkflowsByTriggerQuery { Trigger = message.Trigger });
+        var queryResponse = await _mediator.Send(new ProjectWorkflowsByTriggerQuery { Trigger = message.Trigger, ProjectId = message.ProjectId });
 
         var response = new ResponseModel<WorkflowsByTriggerResponse>
         {

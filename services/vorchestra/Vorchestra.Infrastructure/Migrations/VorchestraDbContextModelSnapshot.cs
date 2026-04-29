@@ -92,6 +92,9 @@ namespace Vorchestra.Infrastructure.Migrations
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("TenantProjectId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -209,7 +212,7 @@ namespace Vorchestra.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("BillingCycle")
+                    b.Property<string>("AdminPassword")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -224,47 +227,62 @@ namespace Vorchestra.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Domain")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Identifier")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsSetupComplete")
-                        .HasColumnType("boolean");
+                    b.Property<int>("Identifier")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTimeOffset?>("OnboardedAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<Guid?>("PlanId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ServerId")
-                        .HasColumnType("uuid");
 
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tenants");
+                });
+
+            modelBuilder.Entity("Vorchestra.Domain.DataModels.TenantProject", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int?>("AssignedPort")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ConnectionString")
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Domain")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsSetupComplete")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("OnboardedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ServerId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<DateTimeOffset?>("SubscriptionEndDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("SubscriptionStartDate")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset?>("SuspendedAt")
                         .HasColumnType("timestamp with time zone");
@@ -273,15 +291,58 @@ namespace Vorchestra.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTimeOffset?>("TrialEndsAt")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tenants");
+                    b.ToTable("TenantProjects");
+                });
+
+            modelBuilder.Entity("Vorchestra.Domain.DataModels.TenantSubscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("BillingCycle")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsFreeTrial")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TenantProjectId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TenantSubscriptions");
                 });
 #pragma warning restore 612, 618
         }

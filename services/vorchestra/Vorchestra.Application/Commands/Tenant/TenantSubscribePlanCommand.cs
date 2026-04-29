@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Shared.Application.Models;
 using Shared.Application.Vaidators;
 using Shared.Domain.Constants;
@@ -16,48 +16,60 @@ public class TenantSubscribePlanCommand : ApplyPlanDto, IRequest<ResponseModel<s
 
 public class TenantSubscribePlanCommandHandler : IRequestHandler<TenantSubscribePlanCommand, ResponseModel<string>>
 {
-    private readonly ITenantService _tenantService;
+    private readonly ITenantSubscriptionService _subscriptionService;
+    private readonly ITenantProjectService _tenantProjectService;
     private readonly IServerService _serverService;
     private readonly ITenantEventPublisher _tenantEventPublisher;
-    public TenantSubscribePlanCommandHandler(ITenantService tenantService, IServerService serverService, ITenantEventPublisher tenantEventPublisher)
+
+    public TenantSubscribePlanCommandHandler(
+        ITenantSubscriptionService subscriptionService,
+        ITenantProjectService tenantProjectService,
+        IServerService serverService,
+        ITenantEventPublisher tenantEventPublisher)
     {
-        _tenantService = tenantService;
+        _subscriptionService = subscriptionService;
+        _tenantProjectService = tenantProjectService;
         _serverService = serverService;
         _tenantEventPublisher = tenantEventPublisher;
     }
+
     public async Task<ResponseModel<string>> Handle(TenantSubscribePlanCommand request, CancellationToken cancellationToken)
     {
         ConstantValidator.Validate<BillingCycle>(request.BillingCycle);
 
-        var response = await _tenantService.ApplyPlanAsync(request, cancellationToken);
+        var tenantProjectResponse = await _tenantProjectService.GetTenantProjectByIdAsync(request.TenantProjectId, cancellationToken);
 
-        if(!response.Success)
+        if (!tenantProjectResponse.Success)
+            return Utility.MapResponse(tenantProjectResponse);
+
+        var response = await _subscriptionService.ApplyPlanAsync(request, cancellationToken);
+
+        if (!response.Success)
             return response;
 
-        var workflowsResponse = await _tenantEventPublisher.GetWorkflowsAsync(WorkflowTrigger.Project.TENANT_SUBSCRIBED);
+        var workflowsResponse = await _tenantEventPublisher.GetProjectWorkflowsAsync(WorkflowTrigger.Project.TENANT_SUBSCRIBED, tenantProjectResponse.Data!.ProjectId);
 
         if (!workflowsResponse.Success)
             return Utility.MapResponse(workflowsResponse);
 
-        var tenantResponse = await _tenantService.GetTenantContextByIdAsync(request.TenantId, cancellationToken);
+        var tenantContextResponse = await _tenantProjectService.GetTenantContextAsync(request.TenantProjectId, cancellationToken);
 
-        if (!tenantResponse.Success)
-            return Utility.MapResponse(tenantResponse);
+        if (!tenantContextResponse.Success)
+            return Utility.MapResponse(tenantContextResponse);
 
-        var serverResponse = await _serverService.GetServerContextByIdAsync(request.ServerId!.Value, cancellationToken);
+        var serverId = tenantProjectResponse.Data!.ServerId;
+
+        if (!serverId.HasValue)
+            return new ResponseModel<string> { Success = false, Message = "No server assigned to this tenant project." };
+
+        var serverResponse = await _serverService.GetServerContextByIdAsync(serverId.Value, cancellationToken);
 
         if (!serverResponse.Success)
             return Utility.MapResponse(serverResponse);
 
-        var workflows = workflowsResponse?.Data?.Workflows;
+        var groupIds = workflowsResponse.Data?.Workflows?.OrderBy(w => w.Order).SelectMany(w => w.GroupIds).ToList();
 
-        var groupIds = workflows?.OrderBy(w => w.Order).SelectMany(w => w.GroupIds).ToList();
-
-        var tenantContext = tenantResponse.Data;
-
-        var serverContext = serverResponse.Data;
-
-        var publishResponse = await _tenantEventPublisher.PublishEventAsync(serverContext!, groupIds!, tenantContext);
+        var publishResponse = await _tenantEventPublisher.PublishEventAsync(serverResponse.Data!, groupIds!, tenantContextResponse.Data);
 
         return publishResponse;
     }
