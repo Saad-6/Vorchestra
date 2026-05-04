@@ -15,7 +15,7 @@ public class WorkflowGroupService : IWorkflowGroupService
     }
     public async Task<ResponseModel<string>> AddGroupToWorkflowAsync(Guid workflowId, Guid groupId, CancellationToken cancellationToken = default)
     {
-        var workflowGroup = await _dbContext.WorkflowGroups.Where(wg => wg.Id == workflowId && wg.GroupId == groupId).FirstOrDefaultAsync(cancellationToken);
+        var workflowGroup = await _dbContext.WorkflowGroups.Where(wg => wg.WorkflowId == workflowId && wg.GroupId == groupId).FirstOrDefaultAsync(cancellationToken);
         if (workflowGroup != null)
         {
             return new ResponseModel<string>

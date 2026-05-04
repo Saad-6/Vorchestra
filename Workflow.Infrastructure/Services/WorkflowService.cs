@@ -29,6 +29,8 @@ public class WorkflowService : IWorkflowService
 
         var createdWorkflow = await CreateWorkFlow(createProjectWorkflowDto, projectId: createProjectWorkflowDto.ProjectId, cancellationToken: cancellationToken);
 
+        await _context.SaveChangesAsync();
+
         return new ResponseModel<Guid>
         {
             Success = true,
@@ -51,6 +53,8 @@ public class WorkflowService : IWorkflowService
         }
 
         var createdWorkflow = await CreateWorkFlow(createServerWorkflowDto, serverId: createServerWorkflowDto.ServerId, cancellationToken: cancellationToken);
+
+        await _context.SaveChangesAsync();
 
         return new ResponseModel<Guid>
         {
@@ -218,7 +222,7 @@ public class WorkflowService : IWorkflowService
             ServerId = x.ServerId
         });
 
-        query = model.ApplyFilters(query);
+        //query = model.ApplyFilters(query);
         var count = await query.CountAsync(cancellationToken);
         var items = await query.ToListAsync(cancellationToken);
 

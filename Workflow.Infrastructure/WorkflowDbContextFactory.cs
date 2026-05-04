@@ -8,7 +8,7 @@ public class WorkflowDbContextFactory : IDesignTimeDbContextFactory<WorkflowDbCo
     public WorkflowDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<WorkflowDbContext>();
-        optionsBuilder.UseNpgsql("Host=localhost;Database=vorchestra;Username=postgres;Password=postgres");
+        optionsBuilder.UseNpgsql("Host=localhost;Database=vorchestra;Username=postgres;Password=Syst@123");
         return new WorkflowDbContext(optionsBuilder.Options);
     }
 }

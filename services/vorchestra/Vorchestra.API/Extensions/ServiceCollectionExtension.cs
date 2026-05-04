@@ -1,9 +1,11 @@
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Shared.Application.Contracts;
+using Shared.Application.Interfaces;
 using Shared.Contracts.RequestModels;
 using Shared.Domain.Constants;
 using Shared.DTO;
+using Shared.Infrastructure.Services;
 using Vochestra.Infrastructure;
 using Vochestra.Infrastructure.Services;
 using Vorchestra.Application.Commands.Plan;
@@ -30,6 +32,7 @@ public static class ServiceCollectionExtension
         });
 
         services.AddSingleton<IDatabaseService, DatabaseService>();
+        services.AddSingleton<IHashService, HashService>();
 
         services.AddScoped<IServerService, ServerService>();
         services.AddScoped<ITenantService, TenantService>();

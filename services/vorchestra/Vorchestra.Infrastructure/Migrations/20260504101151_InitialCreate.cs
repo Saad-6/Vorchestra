@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Vorchestra.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,6 +39,7 @@ namespace Vorchestra.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     TenantId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TenantProjectId = table.Column<Guid>(type: "uuid", nullable: false),
                     PlanId = table.Column<Guid>(type: "uuid", nullable: false),
                     IsFreeTrial = table.Column<bool>(type: "boolean", nullable: false),
                     StartDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
@@ -97,35 +98,69 @@ namespace Vorchestra.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TenantProjects",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProjectId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ServerId = table.Column<Guid>(type: "uuid", nullable: true),
+                    Domain = table.Column<string>(type: "text", nullable: true),
+                    ConnectionString = table.Column<string>(type: "text", nullable: true),
+                    AssignedPort = table.Column<int>(type: "integer", nullable: true),
+                    Status = table.Column<string>(type: "text", nullable: false),
+                    IsSetupComplete = table.Column<bool>(type: "boolean", nullable: false),
+                    OnboardedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    SuspendedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    SuspensionReason = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TenantProjects", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tenants",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
+                    Slug = table.Column<string>(type: "text", nullable: false),
+                    Identifier = table.Column<int>(type: "integer", nullable: false),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
                     AdminEmail = table.Column<string>(type: "text", nullable: false),
+                    AdminPassword = table.Column<string>(type: "text", nullable: false),
                     BusinessEmail = table.Column<string>(type: "text", nullable: false),
-                    Domain = table.Column<string>(type: "text", nullable: false),
-                    Status = table.Column<string>(type: "text", nullable: false),
-                    SuspendedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    SuspensionReason = table.Column<string>(type: "text", nullable: false),
-                    TrialEndsAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    PlanId = table.Column<Guid>(type: "uuid", nullable: true),
-                    SubscriptionStartDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    SubscriptionEndDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    BillingCycle = table.Column<string>(type: "text", nullable: false),
-                    Slug = table.Column<string>(type: "text", nullable: false),
-                    Identifier = table.Column<string>(type: "text", nullable: false),
-                    IsSetupComplete = table.Column<bool>(type: "boolean", nullable: false),
-                    OnboardedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    ServerId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tenants", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TenantSubscriptions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TenantProjectId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PlanId = table.Column<Guid>(type: "uuid", nullable: false),
+                    BillingCycle = table.Column<string>(type: "text", nullable: false),
+                    IsFreeTrial = table.Column<bool>(type: "boolean", nullable: false),
+                    StartDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    EndDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    Status = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TenantSubscriptions", x => x.Id);
                 });
         }
 
@@ -145,7 +180,13 @@ namespace Vorchestra.Infrastructure.Migrations
                 name: "Servers");
 
             migrationBuilder.DropTable(
+                name: "TenantProjects");
+
+            migrationBuilder.DropTable(
                 name: "Tenants");
+
+            migrationBuilder.DropTable(
+                name: "TenantSubscriptions");
         }
     }
 }

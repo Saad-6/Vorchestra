@@ -17,12 +17,11 @@ public class VariableSourceService : IVariableSourceService
 
         if (fetchTenantVariables)
         {
-            sources.Concat(
-                typeof(ScriptVariableSource.Tenant)
-                    .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
-                    .Where(f => f.IsLiteral && !f.IsInitOnly)
-                    .Select(f => (string)f.GetRawConstantValue())
-            );
+            var tenantSources = typeof(ScriptVariableSource.Tenant)
+                                .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                                .Where(f => f.IsLiteral && !f.IsInitOnly)
+                                .Select(f => (string)f.GetRawConstantValue());
+            sources = sources.Concat(tenantSources);
         }
         var response = new ResponseModel<IEnumerable<string>>
         {

@@ -10,6 +10,7 @@ public class FilterModel
 
     public IQueryable<T> ApplyFilters<T>(IQueryable<T> query)
     {
+        if (Page < 0) Page = 1;
         var parameter = Expression.Parameter(typeof(T), "x");
 
         foreach (var filter in Filters)

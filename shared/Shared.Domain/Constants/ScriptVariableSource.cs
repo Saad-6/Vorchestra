@@ -15,6 +15,7 @@ public static class ScriptVariableSource
     {
         public const string ID = "Server.Id";
         public const string NAME = "Server.Name";
+        public const string DEFAULT_DIR = "Server.DefaultDirectory";
         public const string IP_ADDRESS = "Server.IpAddress";
         public const string PORT = "Server.Port";
         public const string USERNAME = "Server.Username";
