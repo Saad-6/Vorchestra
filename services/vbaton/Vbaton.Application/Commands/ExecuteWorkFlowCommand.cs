@@ -21,12 +21,18 @@ public class ExecuteWorkFlowCommandHandler : IRequestHandler<ExecuteWorkFlowComm
 
     private readonly ISshService _sshService;
     private readonly IScriptEventPublisher _scriptEventPublisher;
+    private readonly IProjectEventPublisher _projectEventPublisher;
     private readonly ILogService _logService;
 
-    public ExecuteWorkFlowCommandHandler(ISshService sshService, IScriptEventPublisher scriptEventPublisher, ILogService logService)
+    public ExecuteWorkFlowCommandHandler(
+        ISshService sshService,
+        IScriptEventPublisher scriptEventPublisher,
+        IProjectEventPublisher projectEventPublisher,
+        ILogService logService)
     {
         _sshService = sshService;
         _scriptEventPublisher = scriptEventPublisher;
+        _projectEventPublisher = projectEventPublisher;
         _logService = logService;
     }
 
@@ -68,6 +74,8 @@ public class ExecuteWorkFlowCommandHandler : IRequestHandler<ExecuteWorkFlowComm
 
         var scripts = response?.Data?.OrderBy(m=>m.Order).SelectMany(m => m.Scripts).OrderBy(s => s.Order).ToList();
 
+        await ResolveProjectAsync(request);
+
         SubstituteVariables(request, scripts);
 
         return new NormalizedExecutionRequest
@@ -77,6 +85,29 @@ public class ExecuteWorkFlowCommandHandler : IRequestHandler<ExecuteWorkFlowComm
         };
     }
 
+    private async Task ResolveProjectAsync(ExecutionRequestDto request)
+    {
+        if(request?.Project?.Id != null && request?.Project?.Id != Guid.Empty)
+        {
+            var projectResponse = await _projectEventPublisher.PublishProjectByIdEventAsync(request.Project.Id);
+            
+            if (!projectResponse.Success)
+            {
+                throw new InvalidOperationException($"Project with Id not found: {projectResponse.Message}");
+            }
+
+            var projectContext = new ProjectContextDto
+            {
+                Id = request.Project.Id,
+                IsSourceControl = request.Project.IsSourceControl,
+                Source = request.Project.Source,
+                Name = request.Project.Name,
+                PersonalAccessToken = request.Project.PersonalAccessToken
+            };
+
+            request.Project = projectContext;
+        }
+    }
     private static void SubstituteVariables(ExecutionRequestDto request, List<ScriptResponse>? scripts)
     {
         if (scripts == null) return;

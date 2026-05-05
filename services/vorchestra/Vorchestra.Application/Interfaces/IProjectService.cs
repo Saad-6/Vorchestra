@@ -7,6 +7,7 @@ namespace Vorchestra.Application.Interfaces;
 public interface IProjectService
 {
     Task<PaginatedResponseModel<ProjectViewDto>> GetAllProjectsAsync(FilterModel filter, CancellationToken cancellationToken = default);
+    Task<ResponseModel<ProjectViewDto>> GetProjectByIdAsync(Guid projectId);
     Task<ResponseModel<Guid>> CreateProjectAsync(CreateProjectCommand project);
     Task<ResponseModel<Guid>> UpdateProjectAsync(UpdateProjectCommand project);
     Task<ResponseModel<string>> DeleteProjectAsync(Guid projectId);

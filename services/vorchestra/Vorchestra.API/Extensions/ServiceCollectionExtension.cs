@@ -11,6 +11,7 @@ using Vochestra.Infrastructure.Services;
 using Vorchestra.Application.Commands.Plan;
 using Vorchestra.Application.Interfaces;
 using Vorchestra.Application.Producers;
+using Vorchestra.Infrastructure.EventHandlers;
 using Vorchestra.Infrastructure.EventPublishers;
 
 namespace Vorchestra.API.Extensions;
@@ -47,6 +48,8 @@ public static class ServiceCollectionExtension
 
         services.AddMassTransit(x =>
         {
+            x.AddConsumer<ProjectByIdEventHandler>();
+
             x.AddRequestClient<ProjectWorkflowsByTriggerRequest>(new Uri($"queue:{Queues.Workflow.ProjectWorkflowsByTrigger}"));
             x.AddRequestClient<ServerWorkflowsByTriggerRequest>(new Uri($"queue:{Queues.Workflow.ServerWorkflowsByTrigger}"));
             x.AddRequestClient<ServerWorkflowByIdRequest>(new Uri($"queue:{Queues.Workflow.ServerWorkflowById}"));
@@ -60,7 +63,10 @@ public static class ServiceCollectionExtension
                     h.Password("guest");
                 });
 
-                cfg.ConfigureEndpoints(context);
+                cfg.ReceiveEndpoint(Queues.Project.ProjectById, e =>
+                {
+                    e.ConfigureConsumer<ProjectByIdEventHandler>(context);
+                });
             });
         });
 

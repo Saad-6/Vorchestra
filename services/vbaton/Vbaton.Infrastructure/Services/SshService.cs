@@ -88,7 +88,7 @@ public class SshService : ISshService
             // inside the script are free to navigate wherever they need.
             var scriptContent = string.IsNullOrWhiteSpace(workingDirectory)
                 ? $"set -e\n{script.Content}"
-                : $"set -e\ncd \"{workingDirectory}\"\n{script.Content}";
+                : $"set -e\nmkdir -p \"{workingDirectory}\"\ncd \"{workingDirectory}\"\n{script.Content}";
 
             // Upload to a temp file so multi-line scripts and special characters are handled safely
             using var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(scriptContent));

@@ -10,6 +10,10 @@ public class Queues
         public const string ScriptsByIds = "scripts-by-ids";
         public const string ScriptsByGroupId = "scripts-by-group-id";
     }
+    public class Project
+    {
+        public const string ProjectById = "project-by-id";
+    }
     public class WorkFlow
     {
         public const string ExecuteWorkFlow = "execute-workflow-queue";

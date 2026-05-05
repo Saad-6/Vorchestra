@@ -1,7 +1,7 @@
 {
   "solution": "Vorchestra",
   "generatedAt": "2026-04-30",
-  "sharedTypes": "interface ResponseModel<T> {\n  success: boolean;\n  message: string;\n  data: T | null;\n}\n\ninterface PaginatedResponseModel<T> {\n  success: boolean;\n  message: string;\n  data: T[];\n  totalCount: number;\n  pageNumber: number;\n  pageSize: number;\n}\n\ninterface PlanViewDto {\n  id: string;\n  projectId: string;\n  name: string;\n  slug: string;\n  monthlyPrice: number;\n  annualPrice: number;\n  maxRam: number;\n  maxStorageGb: number;\n  maxProducts: number;\n  isActive: boolean;\n}\n\ninterface ServerViewDto {\n  id: string;\n  name: string;\n  ipAddress: string;\n  userName: string;\n  port: number;\n  status: string;\n  defaultDirectory: string;\n  totalRamGb: number;\n  totalStorageGb: number;\n  usedRamGb: number;\n  usedStorageGb: number;\n  coreCount: number;\n}\n\ninterface TenantViewDto {\n  id: string;\n  name: string;\n  description: string;\n  phoneNumber: string;\n  adminEmail: string;\n  businessEmail: string;\n}\n\ninterface TenantProjectViewDto {\n  id: string;\n  tenantId: string;\n  projectId: string;\n  serverId: string | null;\n  domain: string | null;\n  connectionString: string | null;\n  assignedPort: number | null;\n  status: string;\n  isSetupComplete: boolean;\n  onboardedAt: string | null;\n  suspendedAt: string | null;\n  suspensionReason: string | null;\n}\n\ninterface ProjectViewDto {\n  id: string;\n  name: string;\n  description: string;\n  url: string | null;\n  isRelative: boolean;\n  branch: string | null;\n  zipFilePath: string | null;\n}\n\ninterface ScriptVariableViewDto {\n  name: string;\n  source: string;\n}\n\ninterface ScriptViewDto {\n  id: string;\n  name: string;\n  description: string;\n  content: string;\n  order: number | null;\n  variables: ScriptVariableViewDto[];\n}\n\ninterface GroupViewDto {\n  id: string;\n  name: string;\n  description: string;\n  scripts: ScriptViewDto[];\n}\n\ninterface VariableViewDto {\n  id: string;\n  name: string;\n  source: string;\n  description: string;\n}\n\ninterface WorkflowDto {\n  id: string;\n  name: string;\n  description: string;\n  isActive: boolean;\n  trigger: string;\n  order: number;\n  projectId: string | null;\n  serverId: string | null;\n}",
+  "sharedTypes": "interface ResponseModel<T> {\n  success: boolean;\n  message: string;\n  data: T | null;\n}\n\ninterface PaginatedResponseModel<T> {\n  success: boolean;\n  message: string;\n  data: T[];\n  totalCount: number;\n  pageNumber: number;\n  pageSize: number;\n}\n\ninterface PlanViewDto {\n  id: string;\n  projectId: string;\n  name: string;\n  slug: string;\n  monthlyPrice: number;\n  annualPrice: number;\n  maxRam: number;\n  maxStorageGb: number;\n  maxProducts: number;\n  isActive: boolean;\n}\n\ninterface ServerViewDto {\n  id: string;\n  name: string;\n  ipAddress: string;\n  userName: string;\n  port: number;\n  status: string;\n  defaultDirectory: string;\n  totalRamGb: number;\n  totalStorageGb: number;\n  usedRamGb: number;\n  usedStorageGb: number;\n  coreCount: number;\n}\n\ninterface TenantViewDto {\n  id: string;\n  name: string;\n  description: string;\n  phoneNumber: string;\n  adminEmail: string;\n  businessEmail: string;\n}\n\ninterface TenantProjectViewDto {\n  id: string;\n  tenantId: string;\n  projectId: string;\n  serverId: string | null;\n  domain: string | null;\n  connectionString: string | null;\n  assignedPort: number | null;\n  status: string;\n  isSetupComplete: boolean;\n  onboardedAt: string | null;\n  suspendedAt: string | null;\n  suspensionReason: string | null;\n}\n\ninterface ProjectViewDto {\n  id: string;\n  name: string;\n  description: string;\n  url: string | null;\n  isRelative: boolean;\n  branch: string | null;\n  zipFilePath: string | null;\n}\n\ninterface ScriptVariableViewDto {\n  name: string;\n  source: string;\n}\n\ninterface ScriptViewDto {\n  id: string;\n  name: string;\n  description: string;\n  content: string;\n  order: number | null;\n  variables: ScriptVariableViewDto[];\n}\n\ninterface GroupViewDto {\n  id: string;\n  name: string;\n  description: string;\n  scripts: ScriptViewDto[];\n}\n\ninterface VariableViewDto {\n  id: string;\n  name: string;\n  source: string;\n  description: string;\n}\n\ninterface WorkflowGroupDto {\n  groupId: string;\n  groupName: string;\n  order: number;\n}\n\ninterface WorkflowDto {\n  id: string;\n  name: string;\n  description: string;\n  isActive: boolean;\n  trigger: string;\n  order: number;\n  projectId: string | null;\n  serverId: string | null;\n  groups: WorkflowGroupDto[];\n}",
   "endpoints": [
     {
       "url": "api/Plan",
@@ -560,7 +560,8 @@
       "request": {
         "body": {
           "workflowId": "string",
-          "groupId": "string"
+          "groupId": "string",
+          "groupName": "string"
         }
       },
       "response": "interface Response {\n  success: boolean;\n  message: string;\n  data: boolean | null;\n}"
@@ -598,7 +599,7 @@
           "searchTerm": "string?"
         }
       },
-      "response": "interface Response {\n  success: boolean;\n  message: string;\n  data: WorkflowDto[];\n  totalCount: number;\n  pageNumber: number;\n  pageSize: number;\n}\n\ninterface WorkflowDto {\n  id: string;\n  name: string;\n  description: string;\n  isActive: boolean;\n  trigger: string;\n  order: number;\n  projectId: string | null;\n  serverId: string | null;\n}"
+      "response": "interface Response {\n  success: boolean;\n  message: string;\n  data: WorkflowDto[];\n  totalCount: number;\n  pageNumber: number;\n  pageSize: number;\n}\n\ninterface WorkflowGroupDto {\n  groupId: string;\n  groupName: string;\n  order: number;\n}\n\ninterface WorkflowDto {\n  id: string;\n  name: string;\n  description: string;\n  isActive: boolean;\n  trigger: string;\n  order: number;\n  projectId: string | null;\n  serverId: string | null;\n  groups: WorkflowGroupDto[];\n}"
     },
     {
       "url": "api/server-workflow/{id}",
@@ -657,7 +658,8 @@
       "request": {
         "body": {
           "workflowId": "string",
-          "groupId": "string"
+          "groupId": "string",
+          "groupName": "string"
         }
       },
       "response": "interface Response {\n  success: boolean;\n  message: string;\n  data: boolean | null;\n}"

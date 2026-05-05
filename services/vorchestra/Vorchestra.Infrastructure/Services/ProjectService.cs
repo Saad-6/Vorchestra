@@ -120,6 +120,29 @@ public class ProjectService : IProjectService
         };
     }
 
+    public async Task<ResponseModel<ProjectViewDto>> GetProjectByIdAsync(Guid projectId)
+    {
+        var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
+        if(project == null)
+        {
+            return new ResponseModel<ProjectViewDto> { Success = false, Message = "Project does not exist" };
+        }
+        return new ResponseModel<ProjectViewDto>
+        {
+            Success = true,
+            Data = new ProjectViewDto
+            {
+                Id = projectId,
+                Name = project.Name,
+                Description = project.Description,
+                Url = project.Url,
+                IsRelative = project.IsRelative,
+                ZipFilePath = project.ZipFilePath,
+                Branch = project.Branch,
+            }
+        };
+    }
+
     public async Task<ResponseModel<Guid>> UpdateProjectAsync(UpdateProjectCommand project)
     {
         var hasUrl = !string.IsNullOrWhiteSpace(project.Url);

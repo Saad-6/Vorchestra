@@ -219,10 +219,14 @@ public class WorkflowService : IWorkflowService
             Description = x.Description,
             IsActive = x.IsActive,
             Trigger = x.Trigger,
-            ServerId = x.ServerId
+            ServerId = x.ServerId,
+            Groups = _context.WorkflowGroups
+                .Where(g => g.WorkflowId == x.Id)
+                .OrderBy(g => g.Order)
+                .Select(g => new WorkflowGroupDto { GroupId = g.GroupId, GroupName = g.GroupName, Order = g.Order })
+                .ToList()
         });
 
-        //query = model.ApplyFilters(query);
         var count = await query.CountAsync(cancellationToken);
         var items = await query.ToListAsync(cancellationToken);
 

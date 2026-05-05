@@ -8,6 +8,7 @@ public class AssignGroupToWorkflowCommand : IRequest<ResponseModel<string>>
 {
     public Guid WorkflowId { get; set; }
     public Guid GroupId { get; set; }
+    public string GroupName { get; set; } = null!;
 }
 public class AssignGroupToWorkflowCommandHandler : IRequestHandler<AssignGroupToWorkflowCommand, ResponseModel<string>>
 {
@@ -18,6 +19,6 @@ public class AssignGroupToWorkflowCommandHandler : IRequestHandler<AssignGroupTo
     }
     public async Task<ResponseModel<string>> Handle(AssignGroupToWorkflowCommand request, CancellationToken cancellationToken)
     {
-        return await _workflowService.AddGroupToWorkflowAsync(request.WorkflowId, request.GroupId, cancellationToken);
+        return await _workflowService.AddGroupToWorkflowAsync(request.WorkflowId, request.GroupId, request.GroupName, cancellationToken);
     }
 }

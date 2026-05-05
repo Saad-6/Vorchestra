@@ -13,7 +13,7 @@ public class WorkflowGroupService : IWorkflowGroupService
     {
         _dbContext = dbContext;
     }
-    public async Task<ResponseModel<string>> AddGroupToWorkflowAsync(Guid workflowId, Guid groupId, CancellationToken cancellationToken = default)
+    public async Task<ResponseModel<string>> AddGroupToWorkflowAsync(Guid workflowId, Guid groupId, string groupName, CancellationToken cancellationToken = default)
     {
         var workflowGroup = await _dbContext.WorkflowGroups.Where(wg => wg.WorkflowId == workflowId && wg.GroupId == groupId).FirstOrDefaultAsync(cancellationToken);
         if (workflowGroup != null)
@@ -32,6 +32,7 @@ public class WorkflowGroupService : IWorkflowGroupService
             Id = Guid.NewGuid(),
             WorkflowId = workflowId,
             GroupId = groupId,
+            GroupName = groupName,
             Order = maxOrder + 1
         };
         

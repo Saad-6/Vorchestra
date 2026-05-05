@@ -28,6 +28,8 @@ public static class VariableMap
             [ScriptVariableSource.Server.DEFAULT_DIR]       = r => r.Server?.DefaultDirectory.ToString(),
             [ScriptVariableSource.Server.USERNAME]          = r => r.Server?.UserName,
             [ScriptVariableSource.Server.PASSWORD]          = r => r.Server?.Password,
+
+            [ScriptVariableSource.Project.PATH]         = r => r.Project?.Source
         };
 
     /// <summary>

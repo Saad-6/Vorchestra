@@ -33,11 +33,13 @@ public static class ServiceCollectionExtension
         services.AddScoped<ISshService, SshService>();
         services.AddScoped<ILogService, LogService>();
         services.AddScoped<IScriptEventPublisher, ScriptEventPublisher>();
+        services.AddScoped<IProjectEventPublisher, ProjectEventPublisher>();
 
         services.AddMassTransit(x =>
         {
             x.AddRequestClient<ScriptsByIdsRequest>(new Uri($"queue:{Queues.Script.ScriptsByIds}"));
             x.AddRequestClient<ScriptsByGroupIdRequest>(new Uri($"queue:{Queues.Script.ScriptsByGroupId}"));
+            x.AddRequestClient<ProjectByIdRequest>(new Uri($"queue:{Queues.Project.ProjectById}"));
 
             x.AddConsumer<ExecuteWorkFlowEventHandler>();
 

@@ -21,6 +21,11 @@ public static class ScriptVariableSource
         public const string USERNAME = "Server.Username";
         public const string PASSWORD = "Server.Password";
     }
+
+    public class Project
+    {
+        public const string PATH = "Project.Path";
+    }
 }
 
 
